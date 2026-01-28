@@ -116,7 +116,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 mostrarImagen(); 
             }
         });
-        
+    
         //PANELES DE REGISTRO Y DESPACHO
         jDesktopPaneDespacho.setLayout(
             new javax.swing.BoxLayout(
