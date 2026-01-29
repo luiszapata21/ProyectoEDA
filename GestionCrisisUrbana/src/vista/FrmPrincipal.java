@@ -971,6 +971,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void jBFalloSaludActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSaludActionPerformed
 
+        
 
     }//GEN-LAST:event_jBFalloSaludActionPerformed
 
