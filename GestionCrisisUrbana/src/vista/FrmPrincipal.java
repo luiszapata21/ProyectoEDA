@@ -6,34 +6,25 @@ package vista;
 
 import Nodos.NodoEvento;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.TimerTask;
+import javax.swing.Timer;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.Timer;
 import logica.GestionCrisis;
 import modelo.Evento;
-import modelo.Servicio;
+import modelo.FallosElectricos;
+import java.util.TimerTask;
 
 /**
  *
@@ -42,7 +33,7 @@ import modelo.Servicio;
 public class FrmPrincipal extends javax.swing.JFrame {
     private JPanel panelCola;
     private PanelPuntos panelPuntos;
-    private GestionCrisis gestionCrisis;
+    private GestionCrisis gestion =  new GestionCrisis();
     
     // COLA DE EVENTOS (FIFO)
     private String[] colaEventos = new String[50];
@@ -100,23 +91,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     public FrmPrincipal() {
         initComponents();
-        gestionCrisis = new GestionCrisis(); 
+        gestion = new GestionCrisis(); 
             
         
         //PUNTOS
         panelPuntos = new PanelPuntos();
-        panelCentral.add(panelPuntos);
-        panelPuntos.setBounds(0, 0, panelCentral.getWidth(), panelCentral.getHeight());   
+        jLabelFoto.add(panelPuntos);
+        panelPuntos.setBounds(0, 0, jLabelFoto.getWidth(), jLabelFoto.getHeight());   
 
-        
-        //IMAGEN
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                mostrarImagen(); 
-            }
-        });
-    
         //PANELES DE REGISTRO Y DESPACHO
         jDesktopPaneDespacho.setLayout(
             new javax.swing.BoxLayout(
@@ -130,14 +112,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 javax.swing.BoxLayout.Y_AXIS
             )
         );
-        
-        
-        
-        /*
-        jDesktopPaneDespacho.setLayout(new BoxLayout(jDesktopPaneDespacho, BoxLayout.Y_AXIS));
-        jDesktopPaneRegistro.setLayout(new BoxLayout(jDesktopPaneRegistro, BoxLayout.Y_AXIS));
-        jDesktopPaneHistorial.setLayout(new BoxLayout(jDesktopPaneHistorial, BoxLayout.Y_AXIS));
-*/
         
         // Fondo del JFrame
         getContentPane().setBackground(BG_PRINCIPAL);
@@ -283,35 +257,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             g.setColor(color);
             g.fillOval(x - radio/2, y - radio/2, radio, radio);
         }
-    }
-    
-    private void mostrarImagen() {
-
-        panelCentral.removeAll();
-        panelCentral.setLayout(new BorderLayout());
-
-        JLayeredPane capaMapa = new JLayeredPane();
-        capaMapa.setPreferredSize(panelCentral.getSize());
-
-        JLabel lblMapa = new JLabel();
-        lblMapa.setBounds(0, 0, panelCentral.getWidth(), panelCentral.getHeight());
-        lblMapa.setIcon(new ImageIcon(
-            getClass().getResource("/recursos/logo1.jpg")
-        ));
-
-        panelPuntos = new PanelPuntos();
-        panelPuntos.setBounds(0, 0,
-                panelCentral.getWidth(),
-                panelCentral.getHeight()
-        );
-
-        capaMapa.add(lblMapa, Integer.valueOf(0));
-        capaMapa.add(panelPuntos, Integer.valueOf(1));
-
-        panelCentral.add(capaMapa, BorderLayout.CENTER);
-        panelCentral.revalidate();
-        panelCentral.repaint();
-    }
+    }    
     
     private void estilizarBoton(JButton btn, Color fondo, Color texto) {
         btn.setBackground(fondo);
@@ -322,9 +268,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         btn.setContentAreaFilled(true);
     }
 
-    
-    
-    
     private void actualizarBarra(JProgressBar barra, JLabel label, int valor) {
         if (valor < 0) valor = 0;
         if (valor > 100) valor = 100;
@@ -334,14 +277,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     private void actualizarTodo() {
 /*
-        actualizarBarra(jProgressEnergia, jLabelErnegia, gestionCrisis.getEnergia());
-        actualizarBarra(jProgressAgua, jLabelAguaValor, gestionCrisis.getAgua());
-        actualizarBarra(jProgressTransporte, jLabelTransporteValor, gestionCrisis.getTransporte());
-        actualizarBarra(jProgressSalud, jLabelSaludValor, gestionCrisis.getSalud());
-        actualizarBarra(jProgressSeguridad1, jLabelSeguridadValor, gestionCrisis.getSeguridad());
+        actualizarBarra(jProgressEnergia, jLabelErnegia, gestion.getEnergia());
+        actualizarBarra(jProgressAgua, jLabelAguaValor, gestion.getAgua());
+        actualizarBarra(jProgressTransporte, jLabelTransporteValor, gestion.getTransporte());
+        actualizarBarra(jProgressSalud, jLabelSaludValor, gestion.getSalud());
+        actualizarBarra(jProgressSeguridad1, jLabelSeguridadValor, gestion.getSeguridad());
 
 
-        int total = gestionCrisis.getColaIncidentes().getTamanio();
+        int total = gestion.getColaIncidentes().getTamanio();
         jLabelEventosValor.setText("Eventos en cola: " + total);
         */
     }
@@ -377,9 +320,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jDesktopPaneRegistro.repaint();
     }
     
-    private void refrescarDespacho() {
-        jDesktopPaneDespacho.removeAll();
-        NodoEvento aux = gestionCrisis.getDespacho().getFrente();
+    public void refrescarDespacho() {
+       // jDesktopPaneDespacho.removeAll();
+        NodoEvento aux = gestion.getDespacho().getFrente();
         while (aux != null) {
             agregarProblemaAlDespacho(aux.info.toString());
             aux = aux.liga;
@@ -388,17 +331,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jDesktopPaneDespacho.repaint();
     }
     
-    private void refrescarRegistro() {
-        jDesktopPaneRegistro.removeAll();
-        NodoEvento aux = gestionCrisis.getDespacho().getFrente();
-        while (aux != null) {
-            agregarProblemaAlDespacho(aux.info.toString());
-            aux = aux.liga;
-        }
-        jDesktopPaneRegistro.revalidate();
-        jDesktopPaneRegistro.repaint();
-    }
-     
     
     private String horaActual() {
         return java.time.LocalTime.now()
@@ -444,7 +376,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jBFalloVial = new javax.swing.JButton();
         jBFalloAgua = new javax.swing.JButton();
         jBFalloElectrico = new javax.swing.JButton();
-        panelCentral = new javax.swing.JPanel();
         jPanelContenedorDespachos = new javax.swing.JPanel();
         jLabelFilaDespacho = new javax.swing.JLabel();
         jProgressSEventos = new javax.swing.JProgressBar();
@@ -459,6 +390,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jBDeshacer = new javax.swing.JButton();
         jDesktopPaneHistorial = new javax.swing.JDesktopPane();
         jLabelSubtitulo = new javax.swing.JLabel();
+        jLabelFoto = new javax.swing.JLabel();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -797,17 +729,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout panelCentralLayout = new javax.swing.GroupLayout(panelCentral);
-        panelCentral.setLayout(panelCentralLayout);
-        panelCentralLayout.setHorizontalGroup(
-            panelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 927, Short.MAX_VALUE)
-        );
-        panelCentralLayout.setVerticalGroup(
-            panelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
         jLabelFilaDespacho.setText("FILA DE DESPACHO");
 
         jProgressSEventos.setValue(100);
@@ -952,6 +873,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabelSubtitulo.setForeground(new java.awt.Color(255, 255, 255));
         jLabelSubtitulo.setText("INTEGRIDAD DE SISTEMAS");
 
+        jLabelFoto.setIcon(new javax.swing.ImageIcon("C:\\Users\\ASUS\\Documents\\Netbeans\\ProyectoEDA\\GestionCrisisUrbana\\src\\recursos\\foto.jpg")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -961,19 +884,21 @@ public class FrmPrincipal extends javax.swing.JFrame {
                     .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabelSubtitulo)
                             .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabelSubtitulo))
-                        .addGap(18, 18, 18)
-                        .addComponent(panelCentral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 976, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -985,42 +910,50 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelSubtitulo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panelCentral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelSubtitulo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .addComponent(jLabelFoto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    
-    
-    
+ 
     
     private void jBFalloElectricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloElectricoActionPerformed
         if (panelPuntos != null) {
             panelPuntos.agregarPunto(Color.RED);
         }
+        
+       Evento evento = gestion.generarFalloElectrico();
+        gestion.iniciarCascadasAutomaticas();
+        JOptionPane.showMessageDialog(
+            this,
+            "Nuevo evento generado:\n" + evento.toString(),
+            "Fallo Eléctrico",
+            JOptionPane.WARNING_MESSAGE
+        );
 
-        gestionCrisis.generarFalloAleatorioELECTRICO();
+        // 👉 AHORA SÍ EXISTEN EN EL DESPACHO
         refrescarDespacho();
     
     }//GEN-LAST:event_jBFalloElectricoActionPerformed
@@ -1047,11 +980,16 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void jBAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAtenderActionPerformed
 
-        Evento e = gestionCrisis.atenderMasCritico();
+        Evento e = gestion.atender();
         if (e != null) {
-            agregarProblemaAlRegistro(e.getDescripcion());
-            refrescarDespacho();
+            agregarProblemaAlRegistro(e.toString());
+            JOptionPane.showMessageDialog(this,
+                "Atendido:\n" + e.toString(),
+                "Atención",
+                JOptionPane.INFORMATION_MESSAGE
+            );
         }
+        refrescarDespacho();
         
     }//GEN-LAST:event_jBAtenderActionPerformed
 
@@ -1131,6 +1069,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelErnegia1;
     private javax.swing.JLabel jLabelEventosValor;
     private javax.swing.JLabel jLabelFilaDespacho;
+    private javax.swing.JLabel jLabelFoto;
     private javax.swing.JLabel jLabelRegistro;
     private javax.swing.JLabel jLabelSalud;
     private javax.swing.JLabel jLabelSaludValor;
@@ -1151,6 +1090,5 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JProgressBar jProgressSeguridad1;
     private javax.swing.JProgressBar jProgressTransporte;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JPanel panelCentral;
     // End of variables declaration//GEN-END:variables
 }

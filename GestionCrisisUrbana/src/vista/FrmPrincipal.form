@@ -93,22 +93,26 @@
                   <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jDesktopPaneAgua" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jDesktopPaneTransporte" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jDesktopPaneErnegia" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jDesktopPaneSalud" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jLabelSubtitulo" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jDesktopPaneAgua" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jDesktopPaneTransporte" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jDesktopPaneErnegia" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jDesktopPaneSalud" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jLabelFoto" min="-2" pref="976" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="panelCentral" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jPanelContenedorDespachos" max="32767" attributes="0"/>
                           <Component id="jPanelContendorConsola" max="32767" attributes="0"/>
@@ -125,30 +129,34 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jDesktopPaneErnegia" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jDesktopPaneSalud" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jDesktopPaneTransporte" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jDesktopPaneAgua" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneErnegia" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneSalud" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneTransporte" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneAgua" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="panelCentral" max="32767" attributes="0"/>
+                  <Component id="jLabelFoto" alignment="1" pref="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -563,21 +571,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="panelCentral">
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="927" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-    </Container>
     <Container class="javax.swing.JPanel" name="jPanelContenedorDespachos">
 
       <Layout>
@@ -800,6 +793,13 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="INTEGRIDAD DE SISTEMAS"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelFoto">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="2" name="C:\Users\ASUS\Documents\Netbeans\ProyectoEDA\GestionCrisisUrbana\src\recursos\foto.jpg"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

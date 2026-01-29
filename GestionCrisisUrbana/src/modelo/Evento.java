@@ -16,13 +16,14 @@ public class Evento {
     private String nivel;          // 3 = crítico, 2 = medio, 1 = bajo
     private String descripcion;
     private LocalTime hora;
+    
 
     public Evento(int id, String tipo, String nivel, String descripcion) {
         this.id = id;
         this.tipo = tipo;
         this.nivel = nivel;
         this.descripcion=descripcion;
-        this.hora = LocalTime.now();
+        this.hora = LocalTime.now();     
     }
 
     public int getId() {
@@ -44,7 +45,7 @@ public class Evento {
     public String getDescripcion() {
         return descripcion;
     }
-    
+
     
     
 
