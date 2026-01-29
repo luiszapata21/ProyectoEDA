@@ -53,6 +53,32 @@ public class Evento {
             //"[" + hora + "] 
            return        tipo + " | Nivel: " + nivel + " | " + descripcion;
        }
-    
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       /*
+
+
+
+
+
+       ESTO ES UNA PRUEBA XD
+
+**
+       
+       
+       
+       
+       
+       
+       
+   */ 
 }
 
