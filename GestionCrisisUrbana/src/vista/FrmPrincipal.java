@@ -7,45 +7,52 @@ package vista;
 import Nodos.NodoEvento;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.TimerTask;
 import javax.swing.Timer;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import logica.GestionCrisis;
 import modelo.Evento;
-import modelo.FallosElectricos;
-import java.util.TimerTask;
+import modelo.TipoProblema;
+
 
 /**
  *
  * @author ASUS
  */
 public class FrmPrincipal extends javax.swing.JFrame {
-    private JPanel panelCola;
+    // PUNTOS
     private PanelPuntos panelPuntos;
-    private GestionCrisis gestion =  new GestionCrisis();
     
-    // COLA DE EVENTOS (FIFO)
-    private String[] colaEventos = new String[50];
-    private int totalCola = 0;
+    //ATRIBUTO GLOBAL
+    private GestionCrisis gestion;
+    
+    //HISTORIAL
+    private JLabel[] pilaHistorial;
+    private int topeHistorial;
+    private final int MAX_HISTORIAL = 100;
 
-    // PILA DE EVENTOS (LIFO)
-    private String[] pilaEventos = new String[50];
-    private int totalPila = 0;
+    
+    //BARRAS
+    private int eventosActivos = 0;
+    private final int MAX_EVENTOS = 100;
     
 
-
-       // ================== COLORES ==================
+       // ----------- COLORES -----------
     private final Color BG_PRINCIPAL = new Color(10, 15, 30);
     private final Color BG_PANEL     = new Color(20, 30, 55);
     private final Color ROJO_ALERTA  = new Color(220, 60, 60);
@@ -54,7 +61,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private final Color AZUL         = new Color(80, 160, 255);
     private final Color MORADO       = new Color(170, 90, 255);
 
-    // ================== PANEL ==================
+    // ----------- PANEL -----------
     private void estilizarPanel(JDesktopPane p) {
         p.setBackground(BG_PANEL);
         p.setBorder(
@@ -65,7 +72,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         p.setOpaque(true);
     }
 
-    // ================== BARRA ==================
+    // ----------- BARRA -----------
     private void estilizarBarra(JProgressBar bar, Color color) {
         bar.setForeground(color);
         bar.setBackground(new Color(30, 40, 70));
@@ -75,7 +82,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         bar.setStringPainted(false);
     }
 
-    // ================== BOTÓN ==================
+    // ----------- BOTÓN -----------
     private void estilizarBoton(JButton btn, Color fondo) {
         btn.setBackground(fondo.darker());
         btn.setForeground(Color.WHITE);
@@ -89,6 +96,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
 
 
+    
     public FrmPrincipal() {
         initComponents();
         gestion = new GestionCrisis(); 
@@ -98,20 +106,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
         panelPuntos = new PanelPuntos();
         jLabelFoto.add(panelPuntos);
         panelPuntos.setBounds(0, 0, jLabelFoto.getWidth(), jLabelFoto.getHeight());   
+        
+        
 
         //PANELES DE REGISTRO Y DESPACHO
-        jDesktopPaneDespacho.setLayout(
-            new javax.swing.BoxLayout(
-                jDesktopPaneDespacho,
-                javax.swing.BoxLayout.Y_AXIS
-            )
-        );
-         jDesktopPaneRegistro.setLayout(
-            new javax.swing.BoxLayout(
-                jDesktopPaneRegistro,
-                javax.swing.BoxLayout.Y_AXIS
-            )
-        );
+        jPanelDespacho.setLayout( new javax.swing.BoxLayout(jPanelDespacho,javax.swing.BoxLayout.Y_AXIS) );
+        jPanelRegsitro.setLayout(new javax.swing.BoxLayout(jPanelRegsitro, javax.swing.BoxLayout.Y_AXIS));
+       
+        
+        gestion= new GestionCrisis();
+        gestion.setVista(this);
+         
+        pilaHistorial = new JLabel[MAX_HISTORIAL];
+        topeHistorial = -1;
         
         // Fondo del JFrame
         getContentPane().setBackground(BG_PRINCIPAL);
@@ -124,13 +131,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         estilizarPanel(jDesktopPaneSeguridad);
         estilizarPanel(jDesktopPaneBotones);
         estilizarPanel(jDesktopPane1);
-        jDesktopPane1.setBorder( javax.swing.BorderFactory.createLineBorder(new Color(80, 160, 255), 2
-        ));
-        estilizarPanel(jDesktopPaneDespacho);
-        estilizarPanel(jDesktopPaneRegistro);
-        estilizarPanel(jDesktopPaneHistorial);
+        jPanelDespacho.setBorder( javax.swing.BorderFactory.createLineBorder(new Color(80, 160, 255), 2));
         jPanelContendorConsola.setBackground(new Color(16, 50, 90)); 
         jPanelContenedorDespachos.setBackground(new Color(16, 50, 90)); 
+        jPanelDespacho.setBackground(new Color(200, 220, 235));
+        jPanelRegsitro.setBackground(new Color(200, 220, 235));
+        jPanelHistorial.setBackground(Color.BLACK);
+
+        
 
         // ====== BARRAS ======
         estilizarBarra(jProgressEnergia, ROJO_ALERTA);
@@ -138,8 +146,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         estilizarBarra(jProgressTransporte, AMARILLO);
         estilizarBarra(jProgressAgua, AZUL);
         estilizarBarra(jProgressSeguridad1, MORADO);
-            estilizarBarra(jProgressSEventos, AZUL);
-
+        estilizarBarra(jProgressSEventos, AZUL);
+        
         // ====== BOTONES ======
         estilizarBoton(jBFalloElectrico, ROJO_ALERTA);
         estilizarBoton(jBFalloAgua, AZUL);
@@ -156,28 +164,21 @@ public class FrmPrincipal extends javax.swing.JFrame {
         
 
         jLabelTitulo.setFont(titulo);
-        jLabelFilaDespacho.setFont(new Font("Segoe UI", Font.BOLD, 25) {
-        });
-        jLabelRegistro.setFont(new Font("Segoe UI", Font.BOLD, 25) {
-        });
-        jLabelSubtitulo.setFont(new Font("Segoe UI", Font.BOLD, 20) {
-        });
-
+        jLabelFilaDespacho.setFont(new Font("Segoe UI", Font.BOLD, 25) { });
+        jLabelRegistro.setFont(new Font("Segoe UI", Font.BOLD, 25) {});
+        jLabelSubtitulo.setFont(new Font("Segoe UI", Font.BOLD, 20) {});
         jLabelEnergiaValor.setFont(valor);
         jLabelSaludValor.setFont(valor);
         jLabelTransporteValor.setFont(valor);
         jLabelAguaValor.setFont(valor);
         jLabelSeguridadValor.setFont(valor);
         jLabelEventosValor.setFont(valor);
-        jLabelEventosValor.setFont(new Font("Segoe UI", Font.BOLD, 40) {
-        });
+        jLabelEventosValor.setFont(new Font("Segoe UI", Font.BOLD, 40) { });
         jLabelErnegia.setFont(valorServicios);
         jLabelSalud.setFont(valorServicios);
         jLabelTransporte.setFont(valorServicios);
         jLabelAgua.setFont(valorServicios);
         jLabelSeguridad.setFont(valorServicios);
-        
-        
         jLabelEnergiaValor.setForeground(new Color(220, 60, 60));
         jLabelSaludValor.setForeground(new Color(40, 200, 120));
         jLabelTransporteValor.setForeground(new Color(255, 180, 60));
@@ -187,32 +188,45 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabelSubtitulo.setForeground(Color.WHITE);
         jLabelFilaDespacho.setForeground(Color.WHITE);
         jLabelRegistro.setForeground(Color.WHITE);
-        
     }
-    
     
     //------PUNTOS---------
     public class PanelPuntos extends JPanel {
-
         private ArrayList<Punto> puntos = new ArrayList<>();
         private boolean fondoGris = false;
 
         public PanelPuntos() {
             setOpaque(false);
-
             // Timer para animación (palpitado)
             Timer timer = new Timer(80, e -> repaint());
             timer.start();
         }
-
-        public void agregarPunto(Color color) {
-            int x = (int)(Math.random() * getWidth());
-            int y = (int)(Math.random() * getHeight());
-
-            puntos.add(new Punto(x, y, color));
+        
+       public void agregarPunto(Evento e, Color color) {
+            int x = (int) (Math.random() * getWidth());
+            int y = (int) (Math.random() * getHeight());
+            puntos.add(new Punto(e, x, y, color));
             fondoGris = true;
             repaint();
         }
+        
+        public void quitarPunto(Evento e) {
+            puntos.removeIf(p -> p.evento.equals(e));
+            if (puntos.isEmpty()) fondoGris = false;
+            repaint();
+        }
+
+        public void restaurarPunto(Evento e) {
+            // evitar duplicados
+            for (Punto p : puntos) {
+                if (p.evento.equals(e)) {
+                    return;
+                }
+            }
+            Color color = colorPorTipo(e);
+            agregarPunto(e, color);
+        }
+        
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -221,7 +235,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
             // Fondo gris semitransparente
             if (fondoGris) {
-                g2.setColor(new Color(0, 0, 0, 120));
+                g2.setColor(new Color(0, 0, 0, 150));
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
 
@@ -230,64 +244,98 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 p.dibujar(g2);
             }
         }
-
     }
        
     public class Punto {
-
+        Evento evento;
         int x, y;
         Color color;
-        int radio = 6;
+        int radio = 13;
         boolean crecer = true;
 
-        public Punto(int x, int y, Color color) {
+        public Punto(Evento evento, int x, int y, Color color) {
+            this.evento = evento;
             this.x = x;
             this.y = y;
             this.color = color;
         }
 
         public void dibujar(Graphics2D g) {
-
             if (crecer) radio++;
             else radio--;
-
-            if (radio >= 20) crecer = false;
-            if (radio <= 10) crecer = true;
-
+            if (radio >= 25) crecer = false;
+            if (radio <= 20) crecer = true;
             g.setColor(color);
-            g.fillOval(x - radio/2, y - radio/2, radio, radio);
+            g.fillOval(x - radio / 2, y - radio / 2, radio, radio);
         }
-    }    
+    }   
     
-    private void estilizarBoton(JButton btn, Color fondo, Color texto) {
-        btn.setBackground(fondo);
-        btn.setForeground(texto);
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setOpaque(true);
-        btn.setContentAreaFilled(true);
+    private Color colorPorTipo(Evento e) {
+
+        String tipo = e.getTipo().toLowerCase();
+
+        if (tipo.contains("apagón")) {
+            return ROJO_ALERTA;
+        }
+        if (tipo.contains("agua")) {
+            return AZUL;
+        }
+        if (tipo.contains("metro") || tipo.contains("semáforo") || tipo.contains("transporte")) {
+            return AMARILLO;
+        }
+        if (tipo.contains("hospitales")) {
+            return VERDE_OK;
+        }
+
+        return Color.GRAY;
     }
 
-    private void actualizarBarra(JProgressBar barra, JLabel label, int valor) {
+    
+    // --------- BARRAS DE PORCENTAJE -----
+    private void actualizarEventos(int delta) {
+        eventosActivos += delta;
+
+        if (eventosActivos < 0) eventosActivos = 0;
+        if (eventosActivos > MAX_EVENTOS) eventosActivos = MAX_EVENTOS;
+
+        jProgressSEventos.setValue(eventosActivos);
+        jLabelEventosValor.setText(String.valueOf(eventosActivos));
+    }
+    
+    private int impactoPorNivel(String nivel) {
+        switch (nivel) {
+            case "CRÍTICO": return 30;
+            case "MEDIO":   return 15;
+            case "BAJO":    return 5;
+            default:        return 0;
+        }
+    }
+    
+    private void modificarBarra(JProgressBar barra, JLabel label,int delta) {
+        int valor = barra.getValue() + delta;
         if (valor < 0) valor = 0;
         if (valor > 100) valor = 100;
         barra.setValue(valor);
         label.setText(valor + " %");
     }
     
-    private void actualizarTodo() {
-/*
-        actualizarBarra(jProgressEnergia, jLabelErnegia, gestion.getEnergia());
-        actualizarBarra(jProgressAgua, jLabelAguaValor, gestion.getAgua());
-        actualizarBarra(jProgressTransporte, jLabelTransporteValor, gestion.getTransporte());
-        actualizarBarra(jProgressSalud, jLabelSaludValor, gestion.getSalud());
-        actualizarBarra(jProgressSeguridad1, jLabelSeguridadValor, gestion.getSeguridad());
-
-
-        int total = gestion.getColaIncidentes().getTamanio();
-        jLabelEventosValor.setText("Eventos en cola: " + total);
-        */
+    private void aplicarImpacto(Evento e, boolean subir) {
+        int impacto = impactoPorNivel(e.getNivel());
+        if (!subir) impacto = -impacto;
+        String tipo = e.getTipo().toUpperCase();
+        if (tipo.contains("APAGÓN") ||  tipo.contains("CORTE") || tipo.contains("SOBRECARGA") ) {
+            modificarBarra(jProgressEnergia, jLabelEnergiaValor, impacto);
+        } else if (tipo.contains("AGUA")) {
+            modificarBarra(jProgressAgua, jLabelAguaValor, impacto);
+        } else if (tipo.contains("TRANSPORTE") || tipo.contains("METRO") || tipo.contains("SEMÁFOROS")) {
+            modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
+        } else if (tipo.contains("HOSPITALES") || tipo.contains("SALUD")) {
+            modificarBarra(jProgressSalud, jLabelSaludValor, impacto);
+        } else if (tipo.contains("SEGURIDAD")) {
+            modificarBarra(jProgressSeguridad1, jLabelSeguridadValor, impacto);
+        }
     }
+    
     
     
     //-------DESPACHO Y RGISTRO
@@ -308,37 +356,128 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     private void agregarProblemaAlDespacho(String texto) {
         JPanel problema = crearProblema(texto);
-        jDesktopPaneDespacho.add(problema);
-        jDesktopPaneDespacho.revalidate();
-        jDesktopPaneDespacho.repaint();
+        jPanelDespacho.add(problema);
+        jPanelDespacho.revalidate();
+        jPanelDespacho.repaint();
     }
     
      private void agregarProblemaAlRegistro(String texto) {
         JPanel problema = crearProblema(texto);
-        jDesktopPaneRegistro.add(problema);
-        jDesktopPaneRegistro.revalidate();
-        jDesktopPaneRegistro.repaint();
+        jPanelRegsitro.add(problema);
+        jPanelRegsitro.revalidate();
+        jPanelRegsitro.repaint();
     }
     
     public void refrescarDespacho() {
-       // jDesktopPaneDespacho.removeAll();
+         jPanelDespacho.removeAll();
         NodoEvento aux = gestion.getDespacho().getFrente();
         while (aux != null) {
             agregarProblemaAlDespacho(aux.info.toString());
             aux = aux.liga;
         }
-        jDesktopPaneDespacho.revalidate();
-        jDesktopPaneDespacho.repaint();
+        jPanelDespacho.revalidate();
+        jPanelDespacho.repaint();
     }
     
+    public void refrescarRegistro() {
+        jPanelRegsitro.removeAll();
+
+        NodoEvento aux = gestion.getRegistro().getCima(); // pila (último arriba)
+        while (aux != null) {
+            agregarProblemaAlRegistro(aux.info.toString());
+            aux = aux.liga;
+        }
+
+        jPanelRegsitro.revalidate();
+        jPanelRegsitro.repaint();
+        
+    }
+
+    
+    
+    // ------ HISTORISAL ------
+    
+    public void agregarAlHistorial(String texto) {
+        if (topeHistorial == MAX_HISTORIAL - 1) return; // lleno
+         JLabel lbl = new JLabel(texto);
+         lbl.setForeground(Color.RED);
+         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+         // subir tope
+         topeHistorial++;
+
+         // mover todo hacia abajo (efecto pila)
+         for (int i = topeHistorial; i > 0; i--) {
+             pilaHistorial[i] = pilaHistorial[i - 1];
+         }
+
+         // nuevo arriba
+         pilaHistorial[0] = lbl;
+         refrescarHistorial();
+        
+    }
+    
+    public void refrescarHistorial() {
+        jPanelHistorial.removeAll();
+        int y = 10;
+        for (int i = 0; i <= topeHistorial; i++) {
+            JLabel lbl = pilaHistorial[i];
+            lbl.setBounds(
+                10,
+                y,
+                500,
+                25
+            );
+            jPanelHistorial.add(lbl);
+            y += 28;
+        }
+        jPanelHistorial.revalidate();
+        jPanelHistorial.repaint();
+    }
     
     private String horaActual() {
         return java.time.LocalTime.now()
                 .withNano(0)
                 .toString();
     }
+    
+    public void registrarFallo(Evento e) {
+        agregarAlHistorial(
+            "[" + horaActual() + "] ❌ FALLO: " + e.getNivel() + " | " + e.getTipo()
+        ); 
+        actualizarEventos(+1);
+        //aplicarImpacto(e, false);
+    }
 
+    public void registrarCascada(Evento e) {
+        agregarAlHistorial(
+            "[" + horaActual() + "] ⚠ CASCADA: " + e.getNivel() + " | " + e.getTipo()
+        );
+        
+        Color color = colorPorTipo(e);
+        panelPuntos.agregarPunto(e, colorPorTipo(e));
+        actualizarEventos(+1);
+        aplicarImpacto(e, false); 
+    }
 
+    public void registrarAtendido(Evento e) {
+        agregarAlHistorial(
+            "[" + horaActual() + "] ✅ ATENDIDO: " + e.getNivel() + " | " + e.getTipo()
+        );
+        actualizarEventos(-1);
+        panelPuntos.quitarPunto(e);
+       // aplicarImpacto(e, true);
+    }
+
+    public void registrarDeshecho(Evento e) {
+        agregarAlHistorial(
+            "[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo()
+        );
+        actualizarEventos(+1);
+         panelPuntos.restaurarPunto(e);
+        panelPuntos.restaurarPunto(e); 
+         //aplicarImpacto(e, false);
+    }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -381,14 +520,18 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jProgressSEventos = new javax.swing.JProgressBar();
         jLabelEventosValor = new javax.swing.JLabel();
         jBAtender = new javax.swing.JButton();
-        jDesktopPaneDespacho = new javax.swing.JDesktopPane();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jPanelDespacho = new javax.swing.JList<>();
         jPanelContendorConsola = new javax.swing.JPanel();
         jLabelRegistro = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jDesktopPaneRegistro = new javax.swing.JDesktopPane();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jPanelRegsitro = new javax.swing.JList<>();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jPanelHistorial = new javax.swing.JList<>();
         jBDeshacer = new javax.swing.JButton();
-        jDesktopPaneHistorial = new javax.swing.JDesktopPane();
         jLabelSubtitulo = new javax.swing.JLabel();
         jLabelFoto = new javax.swing.JLabel();
 
@@ -622,7 +765,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             .addGroup(jDesktopPaneSeguridadLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jProgressSeguridad1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jDesktopPaneSeguridadLayout.setVerticalGroup(
             jDesktopPaneSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -742,16 +885,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jDesktopPaneDespachoLayout = new javax.swing.GroupLayout(jDesktopPaneDespacho);
-        jDesktopPaneDespacho.setLayout(jDesktopPaneDespachoLayout);
-        jDesktopPaneDespachoLayout.setHorizontalGroup(
-            jDesktopPaneDespachoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jDesktopPaneDespachoLayout.setVerticalGroup(
-            jDesktopPaneDespachoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 237, Short.MAX_VALUE)
-        );
+        jPanelDespacho.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(jPanelDespacho);
 
         javax.swing.GroupLayout jPanelContenedorDespachosLayout = new javax.swing.GroupLayout(jPanelContenedorDespachos);
         jPanelContenedorDespachos.setLayout(jPanelContenedorDespachosLayout);
@@ -759,21 +898,25 @@ public class FrmPrincipal extends javax.swing.JFrame {
             jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
                 .addGroup(jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
                         .addGroup(jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
+                                .addGroup(jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(jLabelFilaDespacho))
+                                    .addComponent(jProgressSEventos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(56, 56, 56)
+                                .addComponent(jLabelEventosValor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
+                                .addGap(94, 94, 94)
+                                .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabelFilaDespacho))
-                            .addComponent(jProgressSEventos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(182, 182, 182)
-                        .addComponent(jLabelEventosValor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jDesktopPaneDespacho, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelContenedorDespachosLayout.setVerticalGroup(
             jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -785,8 +928,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabelFilaDespacho)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jProgressSEventos, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jDesktopPaneDespacho)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -794,46 +939,23 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLabelRegistro.setText("CONSOLA");
 
-        jBDeshacer.setText("DESHACER");
-        jBDeshacer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBDeshacerActionPerformed(evt);
-            }
+        jPanelRegsitro.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
         });
+        jScrollPane7.setViewportView(jPanelRegsitro);
 
-        jDesktopPaneRegistro.setLayer(jBDeshacer, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jTabbedPane1.addTab("tab2", jScrollPane7);
 
-        javax.swing.GroupLayout jDesktopPaneRegistroLayout = new javax.swing.GroupLayout(jDesktopPaneRegistro);
-        jDesktopPaneRegistro.setLayout(jDesktopPaneRegistroLayout);
-        jDesktopPaneRegistroLayout.setHorizontalGroup(
-            jDesktopPaneRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDesktopPaneRegistroLayout.createSequentialGroup()
-                .addGap(134, 134, 134)
-                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(140, Short.MAX_VALUE))
-        );
-        jDesktopPaneRegistroLayout.setVerticalGroup(
-            jDesktopPaneRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPaneRegistroLayout.createSequentialGroup()
-                .addContainerGap(186, Short.MAX_VALUE)
-                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        jPanelHistorial.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane6.setViewportView(jPanelHistorial);
 
-        jTabbedPane1.addTab("tab1", jDesktopPaneRegistro);
-
-        javax.swing.GroupLayout jDesktopPaneHistorialLayout = new javax.swing.GroupLayout(jDesktopPaneHistorial);
-        jDesktopPaneHistorial.setLayout(jDesktopPaneHistorialLayout);
-        jDesktopPaneHistorialLayout.setHorizontalGroup(
-            jDesktopPaneHistorialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
-        );
-        jDesktopPaneHistorialLayout.setVerticalGroup(
-            jDesktopPaneHistorialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 237, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("tab2", jDesktopPaneHistorial);
+        jTabbedPane1.addTab("tab2", jScrollPane6);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -843,21 +965,34 @@ public class FrmPrincipal extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        jBDeshacer.setText("DESHACER");
+        jBDeshacer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBDeshacerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelContendorConsolaLayout = new javax.swing.GroupLayout(jPanelContendorConsola);
         jPanelContendorConsola.setLayout(jPanelContendorConsolaLayout);
         jPanelContendorConsolaLayout.setHorizontalGroup(
             jPanelContendorConsolaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelRegistro)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelContendorConsolaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
+                        .addGroup(jPanelContendorConsolaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabelRegistro))
+                            .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
+                                .addGap(118, 118, 118)
+                                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 128, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelContendorConsolaLayout.setVerticalGroup(
@@ -867,7 +1002,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabelRegistro)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(57, 57, 57))
+                .addGap(24, 24, 24)
+                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabelSubtitulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -885,23 +1021,21 @@ public class FrmPrincipal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelSubtitulo)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 976, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 976, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -909,30 +1043,28 @@ public class FrmPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelSubtitulo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
-                    .addComponent(jLabelFoto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabelSubtitulo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jDesktopPaneErnegia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jDesktopPaneSalud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jDesktopPaneTransporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jDesktopPaneAgua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jDesktopPaneSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         pack();
@@ -940,29 +1072,23 @@ public class FrmPrincipal extends javax.swing.JFrame {
  
     
     private void jBFalloElectricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloElectricoActionPerformed
-        if (panelPuntos != null) {
-            panelPuntos.agregarPunto(Color.RED);
-        }
         
-       Evento evento = gestion.generarFalloElectrico();
-        gestion.iniciarCascadasAutomaticas();
+       Evento e = gestion.generarFalloElectrico();
+       panelPuntos.agregarPunto(e, ROJO_ALERTA);
         JOptionPane.showMessageDialog(
             this,
-            "Nuevo evento generado:\n" + evento.toString(),
+            "Nuevo evento generado:\n" + e.toString(),
             "Fallo Eléctrico",
             JOptionPane.WARNING_MESSAGE
         );
-
-        // 👉 AHORA SÍ EXISTEN EN EL DESPACHO
+        aplicarImpacto(e, false);
         refrescarDespacho();
+        
     
     }//GEN-LAST:event_jBFalloElectricoActionPerformed
 
     private void jBFalloAguaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloAguaActionPerformed
 
-        panelPuntos.agregarPunto(AZUL);
-        agregarProblemaAlDespacho("Fallo en el servicio de Agua");
-        actualizarTodo();
     }//GEN-LAST:event_jBFalloAguaActionPerformed
 
     private void jBFalloVialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloVialActionPerformed
@@ -983,7 +1109,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         Evento e = gestion.atender();
         if (e != null) {
-            agregarProblemaAlRegistro(e.toString());
             JOptionPane.showMessageDialog(this,
                 "Atendido:\n" + e.toString(),
                 "Atención",
@@ -991,11 +1116,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
             );
         }
         refrescarDespacho();
-        
+        refrescarRegistro();
+        aplicarImpacto(e, true);
     }//GEN-LAST:event_jBAtenderActionPerformed
 
     private void jBDeshacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBDeshacerActionPerformed
-        // TODO add your handling code here:
+        Evento e = gestion.deshacerUltimo();
+        if (e != null) {
+            refrescarDespacho();
+            refrescarRegistro();
+            aplicarImpacto(e, false);
+        }
+        
+
     }//GEN-LAST:event_jBDeshacerActionPerformed
 
     
@@ -1054,11 +1187,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPaneAgua;
     private javax.swing.JDesktopPane jDesktopPaneBotones;
-    private javax.swing.JDesktopPane jDesktopPaneDespacho;
     private javax.swing.JDesktopPane jDesktopPaneErnegia;
     private javax.swing.JDesktopPane jDesktopPaneErnegia1;
-    private javax.swing.JDesktopPane jDesktopPaneHistorial;
-    private javax.swing.JDesktopPane jDesktopPaneRegistro;
     private javax.swing.JDesktopPane jDesktopPaneSalud;
     private javax.swing.JDesktopPane jDesktopPaneSeguridad;
     private javax.swing.JDesktopPane jDesktopPaneTransporte;
@@ -1083,6 +1213,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelContendorConsola;
     private javax.swing.JPanel jPanelContenedorDespachos;
+    private javax.swing.JList<String> jPanelDespacho;
+    private javax.swing.JList<String> jPanelHistorial;
+    private javax.swing.JList<String> jPanelRegsitro;
     private javax.swing.JProgressBar jProgressAgua;
     private javax.swing.JProgressBar jProgressEnergia;
     private javax.swing.JProgressBar jProgressEnergia1;
@@ -1090,6 +1223,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JProgressBar jProgressSalud;
     private javax.swing.JProgressBar jProgressSeguridad1;
     private javax.swing.JProgressBar jProgressTransporte;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

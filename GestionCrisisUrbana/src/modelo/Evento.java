@@ -16,7 +16,6 @@ public class Evento {
     private String nivel;          // 3 = crítico, 2 = medio, 1 = bajo
     private String descripcion;
     private LocalTime hora;
-    
 
     public Evento(int id, String tipo, String nivel, String descripcion) {
         this.id = id;
@@ -25,7 +24,8 @@ public class Evento {
         this.descripcion=descripcion;
         this.hora = LocalTime.now();     
     }
-
+    
+    
     public int getId() {
         return id;
     }
@@ -51,7 +51,6 @@ public class Evento {
 
     @Override
        public String toString() {
-            //"[" + hora + "] 
            return        tipo + " | Nivel: " + nivel + " | " + descripcion;
        }
        

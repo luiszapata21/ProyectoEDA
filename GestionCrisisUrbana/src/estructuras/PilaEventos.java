@@ -19,6 +19,12 @@ public class PilaEventos {
         return cima == null;
     }
 
+    public NodoEvento getCima() {
+        return cima;
+    }
+    
+    
+
     public void apilar(Evento e) {
         NodoEvento nuevo = new NodoEvento(e);
         nuevo.liga = cima;

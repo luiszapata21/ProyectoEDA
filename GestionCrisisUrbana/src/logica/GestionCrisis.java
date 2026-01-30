@@ -26,6 +26,7 @@ public class GestionCrisis {
     private PilaEventos registro;       // pila de atendidos
     private Evento falloActivo;
     private int id;
+    private FrmPrincipal vista;
 
     public GestionCrisis() {
         despacho = new ColaEventos();
@@ -45,16 +46,40 @@ public class GestionCrisis {
     public ColaEventos getDespacho() {
         return despacho;
     }
+
+    public void setVista(FrmPrincipal vista) {
+        this.vista = vista;
+    }
+
+   
     
-    // ===== BOTÓN FALLO ELÉCTRICO =====
+    
+    
+    
+    // ------------BOTÓN FALLO ELÉCTRICO ------------
     public Evento generarFalloElectrico() {
         Evento e = FallosElectricos.generarFallo(generarId());
         despacho.insertar(e);
+        
+        if (vista != null) {
+            vista.registrarFallo(e);
+            vista.refrescarDespacho();
+        }
+        
         iniciarCascadasAutomaticas();
         return e;
     }
 
-    // ===== ATENDER (CRÍTICO → MEDIO → BAJO) =====
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // ------------ ATENDER (CRÍTICO → MEDIO → BAJO) ------------
     public Evento atender() {
         Evento e = sacarPorNivel("CRÍTICO");
         if (e == null) e = sacarPorNivel("MEDIO");
@@ -62,12 +87,15 @@ public class GestionCrisis {
 
         if (e != null) {
             registro.apilar(e);
+                if (vista != null) {
+                    vista.registrarAtendido(e);
+                }
             liberarCascada();
         }
         return e;
     }
 
-    // ===== SACAR POR NIVEL =====
+    // ------------ SACAR POR NIVEL ------------
     private Evento sacarPorNivel(String nivel) {
         Evento encontrado = null;
         int n = despacho.getTamanio();
@@ -83,7 +111,7 @@ public class GestionCrisis {
         return encontrado;
     }
 
-    // ===== LIBERA UNA CASCADA =====
+    // ------------ LIBERA UNA CASCADA ------------
     private void liberarCascada() {
         if (Math.random() < 0.5) { // aleatorio
             Evento c = cascadasPendientes.eliminar();
@@ -91,9 +119,24 @@ public class GestionCrisis {
         }
     }
 
- 
     
     
+    //------------ DESHACCER ULTIMO ------------
+    public Evento deshacerUltimo() {
+       Evento e = registro.desapilar(); // saca el último
+       if (e != null) {
+           despacho.insertar(e); // vuelve al despacho
+                if (vista != null) {
+                    vista.registrarDeshecho(e);
+                    vista.refrescarDespacho();
+                    vista.refrescarRegistro();
+                }
+       }
+       return e;
+   }
+
+    
+    //------------ INICIAR CASCADA ------------
     public void iniciarCascadasAutomaticas() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -105,16 +148,22 @@ public class GestionCrisis {
                     timer.cancel();
                     return;
                 }
-
                 Evento c = FallosElectricos.generarCascada(generarId());
                 despacho.insertar(c);
-                JOptionPane.showMessageDialog(null, "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
-                "Cascada eléctrica",
-                javax.swing.JOptionPane.WARNING_MESSAGE);
+                if (vista != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.registrarCascada(c);
+                        vista.refrescarDespacho(); });
+                }
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
+                    "Cascada eléctrica",
+                    JOptionPane.WARNING_MESSAGE);
+
                 generadas++;
             }
-        },
-        5000 + (int)(Math.random() * 5000),
-        6000 + (int)(Math.random() * 6000));
+        },7000, 6000);
     }
   }

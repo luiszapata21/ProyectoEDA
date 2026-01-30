@@ -93,29 +93,25 @@
                   <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabelSubtitulo" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="jDesktopPaneAgua" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jDesktopPaneTransporte" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jDesktopPaneErnegia" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jDesktopPaneSalud" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                          <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="jDesktopPaneSeguridad" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jDesktopPaneAgua" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jDesktopPaneTransporte" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jDesktopPaneSalud" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jLabelFoto" min="-2" pref="976" max="-2" attributes="0"/>
+                              <Component id="jDesktopPaneErnegia" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jPanelContenedorDespachos" max="32767" attributes="0"/>
-                          <Component id="jPanelContendorConsola" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jLabelFoto" min="-2" pref="976" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
+                          <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -128,35 +124,31 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneErnegia" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneSalud" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneTransporte" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneAgua" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jDesktopPaneErnegia" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jDesktopPaneSalud" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jDesktopPaneTransporte" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jDesktopPaneAgua" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jDesktopPaneSeguridad" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jDesktopPaneBotones" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabelFoto" alignment="1" pref="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                      <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="jLabelFoto" min="-2" pref="801" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace pref="9" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -418,7 +410,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jProgressSeguridad1" min="-2" pref="200" max="-2" attributes="0"/>
-                  <EmptySpace pref="111" max="32767" attributes="0"/>
+                  <EmptySpace pref="20" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -578,26 +570,33 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jScrollPane4" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabelFilaDespacho" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="jLabelFilaDespacho" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="jProgressSEventos" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                                  <Component id="jLabelEventosValor" min="-2" pref="39" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jProgressSEventos" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
+                                  <Component id="jBAtender" min="-2" pref="125" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jScrollPane3" min="-2" pref="363" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
-                          <Component id="jLabelEventosValor" min="-2" pref="39" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="jDesktopPaneDespacho" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
-                  <Component id="jBAtender" min="-2" pref="125" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -613,8 +612,10 @@
                           <Component id="jProgressSEventos" min="-2" pref="18" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="jDesktopPaneDespacho" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane3" pref="171" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jBAtender" min="-2" pref="45" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -646,20 +647,41 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBAtenderActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JDesktopPane" name="jDesktopPaneDespacho">
+        <Container class="javax.swing.JScrollPane" name="jScrollPane4">
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="237" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-          </Layout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+        </Container>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane3">
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JList" name="jPanelDespacho">
+              <Properties>
+                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                  <StringArray count="15">
+                    <StringItem index="0" value=" "/>
+                    <StringItem index="1" value=" "/>
+                    <StringItem index="2" value=" "/>
+                    <StringItem index="3" value=" "/>
+                    <StringItem index="4" value=" "/>
+                    <StringItem index="5" value=" "/>
+                    <StringItem index="6" value=" "/>
+                    <StringItem index="7" value=" "/>
+                    <StringItem index="8" value=" "/>
+                    <StringItem index="9" value=" "/>
+                    <StringItem index="10" value=" "/>
+                    <StringItem index="11" value=" "/>
+                    <StringItem index="12" value=" "/>
+                    <StringItem index="13" value=" "/>
+                    <StringItem index="14" value=" "/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+          </SubComponents>
         </Container>
       </SubComponents>
     </Container>
@@ -668,13 +690,23 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabelRegistro" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="jPanel2" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabelRegistro" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
+                                  <Component id="jBDeshacer" min="-2" pref="125" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="0" pref="128" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -686,7 +718,8 @@
                   <Component id="jLabelRegistro" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel2" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                  <Component id="jBDeshacer" min="-2" pref="45" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -707,9 +740,9 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jTabbedPane1" min="-2" pref="272" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="jTabbedPane1" min="-2" pref="303" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -719,47 +752,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JDesktopPane" name="jDesktopPaneRegistro">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="tab1">
-                        <Property name="tabTitle" type="java.lang.String" value="tab1"/>
-                      </JTabbedPaneConstraints>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
-                              <Component id="jBDeshacer" min="-2" pref="125" max="-2" attributes="0"/>
-                              <EmptySpace pref="140" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace pref="186" max="32767" attributes="0"/>
-                              <Component id="jBDeshacer" min="-2" pref="45" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
-                  <SubComponents>
-                    <Component class="javax.swing.JButton" name="jBDeshacer">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="DESHACER"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBDeshacerActionPerformed"/>
-                      </Events>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Container class="javax.swing.JDesktopPane" name="jDesktopPaneHistorial">
+                <Container class="javax.swing.JScrollPane" name="jScrollPane7">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="tab2">
@@ -768,23 +761,224 @@
                     </Constraint>
                   </Constraints>
 
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="399" max="32767" attributes="0"/>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="237" max="32767" attributes="0"/>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JList" name="jPanelRegsitro">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                          <StringArray count="57">
+                            <StringItem index="0" value=" "/>
+                            <StringItem index="1" value=" "/>
+                            <StringItem index="2" value=" "/>
+                            <StringItem index="3" value=" "/>
+                            <StringItem index="4" value=" "/>
+                            <StringItem index="5" value=" "/>
+                            <StringItem index="6" value=" "/>
+                            <StringItem index="7" value=" "/>
+                            <StringItem index="8" value=" "/>
+                            <StringItem index="9" value=" "/>
+                            <StringItem index="10" value=" "/>
+                            <StringItem index="11" value=" "/>
+                            <StringItem index="12" value=" "/>
+                            <StringItem index="13" value=" "/>
+                            <StringItem index="14" value=" "/>
+                            <StringItem index="15" value=" "/>
+                            <StringItem index="16" value=" "/>
+                            <StringItem index="17" value=" "/>
+                            <StringItem index="18" value=" "/>
+                            <StringItem index="19" value=" "/>
+                            <StringItem index="20" value=" "/>
+                            <StringItem index="21" value=" "/>
+                            <StringItem index="22" value=" "/>
+                            <StringItem index="23" value=" "/>
+                            <StringItem index="24" value=" "/>
+                            <StringItem index="25" value=" "/>
+                            <StringItem index="26" value=" "/>
+                            <StringItem index="27" value=" "/>
+                            <StringItem index="28" value=" "/>
+                            <StringItem index="29" value=" "/>
+                            <StringItem index="30" value=" "/>
+                            <StringItem index="31" value=" "/>
+                            <StringItem index="32" value=" "/>
+                            <StringItem index="33" value=" "/>
+                            <StringItem index="34" value=" "/>
+                            <StringItem index="35" value=" "/>
+                            <StringItem index="36" value=" "/>
+                            <StringItem index="37" value=" "/>
+                            <StringItem index="38" value=" "/>
+                            <StringItem index="39" value=" "/>
+                            <StringItem index="40" value=" "/>
+                            <StringItem index="41" value=" "/>
+                            <StringItem index="42" value=" "/>
+                            <StringItem index="43" value=" "/>
+                            <StringItem index="44" value=" "/>
+                            <StringItem index="45" value=" "/>
+                            <StringItem index="46" value=" "/>
+                            <StringItem index="47" value=" "/>
+                            <StringItem index="48" value=" "/>
+                            <StringItem index="49" value=" "/>
+                            <StringItem index="50" value=" "/>
+                            <StringItem index="51" value=" "/>
+                            <StringItem index="52" value=" "/>
+                            <StringItem index="53" value=" "/>
+                            <StringItem index="54" value=" "/>
+                            <StringItem index="55" value=" "/>
+                            <StringItem index="56" value=" "/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JScrollPane" name="jScrollPane6">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="tab2">
+                        <Property name="tabTitle" type="java.lang.String" value="tab2"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JList" name="jPanelHistorial">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                          <StringArray count="110">
+                            <StringItem index="0" value=" "/>
+                            <StringItem index="1" value=" "/>
+                            <StringItem index="2" value=" "/>
+                            <StringItem index="3" value=" "/>
+                            <StringItem index="4" value=" "/>
+                            <StringItem index="5" value=" "/>
+                            <StringItem index="6" value=" "/>
+                            <StringItem index="7" value=" "/>
+                            <StringItem index="8" value=" "/>
+                            <StringItem index="9" value=" "/>
+                            <StringItem index="10" value=" "/>
+                            <StringItem index="11" value=" "/>
+                            <StringItem index="12" value=" "/>
+                            <StringItem index="13" value=" "/>
+                            <StringItem index="14" value=" "/>
+                            <StringItem index="15" value=" "/>
+                            <StringItem index="16" value=" "/>
+                            <StringItem index="17" value=" "/>
+                            <StringItem index="18" value=" "/>
+                            <StringItem index="19" value=" "/>
+                            <StringItem index="20" value=" "/>
+                            <StringItem index="21" value=" "/>
+                            <StringItem index="22" value=" "/>
+                            <StringItem index="23" value=" "/>
+                            <StringItem index="24" value=" "/>
+                            <StringItem index="25" value=" "/>
+                            <StringItem index="26" value=" "/>
+                            <StringItem index="27" value=" "/>
+                            <StringItem index="28" value=" "/>
+                            <StringItem index="29" value=" "/>
+                            <StringItem index="30" value=" "/>
+                            <StringItem index="31" value=" "/>
+                            <StringItem index="32" value=" "/>
+                            <StringItem index="33" value=" "/>
+                            <StringItem index="34" value=" "/>
+                            <StringItem index="35" value=" "/>
+                            <StringItem index="36" value=" "/>
+                            <StringItem index="37" value=" "/>
+                            <StringItem index="38" value=" "/>
+                            <StringItem index="39" value=" "/>
+                            <StringItem index="40" value=" "/>
+                            <StringItem index="41" value=" "/>
+                            <StringItem index="42" value=" "/>
+                            <StringItem index="43" value=" "/>
+                            <StringItem index="44" value=" "/>
+                            <StringItem index="45" value=" "/>
+                            <StringItem index="46" value=" "/>
+                            <StringItem index="47" value=" "/>
+                            <StringItem index="48" value=" "/>
+                            <StringItem index="49" value=" "/>
+                            <StringItem index="50" value=" "/>
+                            <StringItem index="51" value=" "/>
+                            <StringItem index="52" value=" "/>
+                            <StringItem index="53" value=" "/>
+                            <StringItem index="54" value=" "/>
+                            <StringItem index="55" value=" "/>
+                            <StringItem index="56" value=" "/>
+                            <StringItem index="57" value=" "/>
+                            <StringItem index="58" value=" "/>
+                            <StringItem index="59" value=" "/>
+                            <StringItem index="60" value=" "/>
+                            <StringItem index="61" value=" "/>
+                            <StringItem index="62" value=" "/>
+                            <StringItem index="63" value=" "/>
+                            <StringItem index="64" value=" "/>
+                            <StringItem index="65" value=" "/>
+                            <StringItem index="66" value=" "/>
+                            <StringItem index="67" value=" "/>
+                            <StringItem index="68" value=" "/>
+                            <StringItem index="69" value=" "/>
+                            <StringItem index="70" value=" "/>
+                            <StringItem index="71" value=" "/>
+                            <StringItem index="72" value=" "/>
+                            <StringItem index="73" value=" "/>
+                            <StringItem index="74" value=" "/>
+                            <StringItem index="75" value=" "/>
+                            <StringItem index="76" value=" "/>
+                            <StringItem index="77" value=" "/>
+                            <StringItem index="78" value=" "/>
+                            <StringItem index="79" value=" "/>
+                            <StringItem index="80" value=" "/>
+                            <StringItem index="81" value=" "/>
+                            <StringItem index="82" value=" "/>
+                            <StringItem index="83" value=" "/>
+                            <StringItem index="84" value=" "/>
+                            <StringItem index="85" value=" "/>
+                            <StringItem index="86" value=" "/>
+                            <StringItem index="87" value=" "/>
+                            <StringItem index="88" value=" "/>
+                            <StringItem index="89" value=" "/>
+                            <StringItem index="90" value=" "/>
+                            <StringItem index="91" value=" "/>
+                            <StringItem index="92" value=" "/>
+                            <StringItem index="93" value=" "/>
+                            <StringItem index="94" value=" "/>
+                            <StringItem index="95" value=" "/>
+                            <StringItem index="96" value=" "/>
+                            <StringItem index="97" value=" "/>
+                            <StringItem index="98" value=" "/>
+                            <StringItem index="99" value=" "/>
+                            <StringItem index="100" value=" "/>
+                            <StringItem index="101" value=" "/>
+                            <StringItem index="102" value=" "/>
+                            <StringItem index="103" value=" "/>
+                            <StringItem index="104" value=" "/>
+                            <StringItem index="105" value=" "/>
+                            <StringItem index="106" value=" "/>
+                            <StringItem index="107" value=" "/>
+                            <StringItem index="108" value=" "/>
+                            <StringItem index="109" value=" "/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
                 </Container>
               </SubComponents>
             </Container>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="jBDeshacer">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="DESHACER"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBDeshacerActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JLabel" name="jLabelSubtitulo">
