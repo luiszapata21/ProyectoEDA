@@ -12,6 +12,7 @@ import estructuras.PilaEventos;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JOptionPane;
+import modelo.BrechaSeguridad;
 import modelo.Evento;
 import modelo.Servicio;
 import vista.FrmPrincipal;
@@ -51,11 +52,6 @@ public class GestionCrisis {
         this.vista = vista;
     }
 
-   
-    
-    
-    
-    
     // ------------BOTÓN FALLO ELÉCTRICO ------------
     public Evento generarFalloElectrico() {
         Evento e = FallosElectricos.generarFallo(generarId());
@@ -68,6 +64,18 @@ public class GestionCrisis {
         
         iniciarCascadasAutomaticas();
         return e;
+    }
+    
+    // ------------BOTÓN FALLO SEGURIDAD ------------
+    public Evento generarFalloSeguridad(){
+        Evento p = BrechaSeguridad.generarFalloP(generarId());
+        despacho.insertar(p);
+        if(vista != null){
+            vista.registrarFallo(p);
+            vista.refrescarDespacho();
+        }
+        iniciarCascadasAutomaticas();
+        return p;
     }
 
     
