@@ -1102,7 +1102,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloSaludActionPerformed
 
     private void jBFalloSeguridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSeguridadActionPerformed
-
+          
     }//GEN-LAST:event_jBFalloSeguridadActionPerformed
 
     private void jBAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAtenderActionPerformed

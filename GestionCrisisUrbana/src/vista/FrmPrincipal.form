@@ -990,11 +990,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelFoto">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Users\ASUS\Documents\Netbeans\ProyectoEDA\GestionCrisisUrbana\src\recursos\foto.jpg"/>
-        </Property>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>
