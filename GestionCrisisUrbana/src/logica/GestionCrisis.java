@@ -62,7 +62,7 @@ public class GestionCrisis {
             vista.refrescarDespacho();
         }
         
-        iniciarCascadasAutomaticas();
+        iniciarCascadasAutomaticasElectrica();
         return e;
     }
     
@@ -74,7 +74,7 @@ public class GestionCrisis {
             vista.registrarFallo(p);
             vista.refrescarDespacho();
         }
-        iniciarCascadasAutomaticas();
+        iniciarCascadasAutomaticasSEGURIDAD();
         return p;
     }
 
@@ -145,7 +145,7 @@ public class GestionCrisis {
 
     
     //------------ INICIAR CASCADA ------------
-    public void iniciarCascadasAutomaticas() {
+    public void iniciarCascadasAutomaticasElectrica() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             int generadas = 0;
@@ -168,6 +168,37 @@ public class GestionCrisis {
                     null,
                     "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
                     "Cascada eléctrica",
+                    JOptionPane.WARNING_MESSAGE);
+
+                generadas++;
+            }
+        },7000, 6000);
+    }
+    
+    
+    public void iniciarCascadasAutomaticasSEGURIDAD() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            int generadas = 0;
+
+            @Override
+            public void run() {
+                if (generadas == 3) {
+                    timer.cancel();
+                    return;
+                }
+                Evento c = BrechaSeguridad.generarCascadaP(generarId());
+                despacho.insertar(c);
+                if (vista != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.registrarCascada(c);
+                        vista.refrescarDespacho(); });
+                }
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
+                    "Cascada seguridad",
                     JOptionPane.WARNING_MESSAGE);
 
                 generadas++;

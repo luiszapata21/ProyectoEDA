@@ -286,7 +286,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         if (tipo.contains("hospitales")) {
             return VERDE_OK;
         }
-
+        if (tipo.contains("disturbios") || tipo.contains("robo") || tipo.contains("incidente") ) {
+            return MORADO;
+        }
         return Color.GRAY;
     }
 
@@ -331,7 +333,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
             modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
         } else if (tipo.contains("HOSPITALES") || tipo.contains("SALUD")) {
             modificarBarra(jProgressSalud, jLabelSaludValor, impacto);
-        } else if (tipo.contains("SEGURIDAD")) {
+        } else if (tipo.contains("DISTURBIOS") || tipo.contains("ROBO") || tipo.contains("INCIDENTE") || tipo.contains("CENTROS")
+                || tipo.contains("ARMADA") || tipo.contains("MEDIOS") || tipo.contains("NEGOCIOS")) {
             modificarBarra(jProgressSeguridad1, jLabelSeguridadValor, impacto);
         }
     }
@@ -417,6 +420,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         
     }
     
+    
+    
+    
     public void refrescarHistorial() {
         jPanelHistorial.removeAll();
         int y = 10;
@@ -441,19 +447,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .toString();
     }
     
+    
+    //--------- METODOS DE REGISTROS
+    
     public void registrarFallo(Evento e) {
         agregarAlHistorial(
             "[" + horaActual() + "] ❌ FALLO: " + e.getNivel() + " | " + e.getTipo()
         ); 
         actualizarEventos(+1);
-        //aplicarImpacto(e, false);
     }
 
     public void registrarCascada(Evento e) {
         agregarAlHistorial(
             "[" + horaActual() + "] ⚠ CASCADA: " + e.getNivel() + " | " + e.getTipo()
         );
-        
         Color color = colorPorTipo(e);
         panelPuntos.agregarPunto(e, colorPorTipo(e));
         actualizarEventos(+1);
@@ -466,7 +473,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         );
         actualizarEventos(-1);
         panelPuntos.quitarPunto(e);
-       // aplicarImpacto(e, true);
     }
 
     public void registrarDeshecho(Evento e) {
@@ -474,9 +480,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             "[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo()
         );
         actualizarEventos(+1);
-         panelPuntos.restaurarPunto(e);
-        panelPuntos.restaurarPunto(e); 
-         //aplicarImpacto(e, false);
+        panelPuntos.restaurarPunto(e);
     }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1075,12 +1079,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         
        Evento e = gestion.generarFalloElectrico();
        panelPuntos.agregarPunto(e, ROJO_ALERTA);
-        JOptionPane.showMessageDialog(
-            this,
-            "Nuevo evento generado:\n" + e.toString(),
-            "Fallo Eléctrico",
-            JOptionPane.WARNING_MESSAGE
-        );
+        JOptionPane.showMessageDialog( this, "Nuevo evento generado:\n" + e.toString(),"Fallo Eléctrico",JOptionPane.WARNING_MESSAGE);
         aplicarImpacto(e, false);
         refrescarDespacho();
         
@@ -1104,12 +1103,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void jBFalloSeguridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSeguridadActionPerformed
           Evento b = gestion.generarFalloSeguridad();
           panelPuntos.agregarPunto(b, MORADO);
-          JOptionPane.showMessageDialog(
-            this,
-            "Nuevo evento generado:\n" + b.toString(),
-            "Fallo en Brecha de Seguridad",
-            JOptionPane.WARNING_MESSAGE
-        );
+          JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + b.toString(),"Fallo de Seguridad",JOptionPane.WARNING_MESSAGE);
           aplicarImpacto(b, false);
           refrescarDespacho();
     }//GEN-LAST:event_jBFalloSeguridadActionPerformed
