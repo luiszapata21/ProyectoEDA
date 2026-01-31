@@ -1102,7 +1102,16 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloSaludActionPerformed
 
     private void jBFalloSeguridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSeguridadActionPerformed
-          
+          Evento b = gestion.generarFalloSeguridad();
+          panelPuntos.agregarPunto(b, MORADO);
+          JOptionPane.showMessageDialog(
+            this,
+            "Nuevo evento generado:\n" + b.toString(),
+            "Fallo en Brecha de Seguridad",
+            JOptionPane.WARNING_MESSAGE
+        );
+          aplicarImpacto(b, false);
+          refrescarDespacho();
     }//GEN-LAST:event_jBFalloSeguridadActionPerformed
 
     private void jBAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAtenderActionPerformed
