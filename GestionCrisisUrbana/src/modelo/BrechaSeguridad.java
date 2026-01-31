@@ -11,20 +11,40 @@ import java.util.Random;
  * @author lagui
  */
 public class BrechaSeguridad {
-    private static Random r = new Random();
+    private static Random s = new Random();
 
     // ===== FALLOS PRINCIPALES =====
-    private static String[][] fallos = {
+    private static String[][] fallosP = {
         {"Disturbios masivos", "CRÍTICO", "Perdoda de control de las personas"},
         {"Robo organizado", "MEDIO", "Miedo en la población"},
         {"Incidente aislado", "BAJO", "Ingresos delictivos de gente"}      
     };
     
     // ===== cascadas =====
-    private static String[][] cascadas = {
+    private static String[][] cascadasP = {
           {"Centros comerciales llenos", "CRÍTICO", "Aglomeración de personas"},
           {"Robo a mano aramada", "CRÍTICO", "Estado peligroso en la ciudad"},
-          {"Metro detenido", "MEDIO", "Transporte suspendido"},
-          {"Agua interrumpida", "MEDIO", "Bombeo detenido"}
-      };
+          {"Miedo Ciudadano", "MEDIO", "Ciudad inestable"},
+          {"Negocios desprotegidos", "MEDIO", "Vacunadores"}
+    };
+    
+    public static Evento generarFalloP(int id){
+        int i = s.nextInt(fallosP.length);
+        return new Evento(
+        id,
+        fallosP[i][0],
+        fallosP[i][1],
+        fallosP[i][2]
+        );
+    }
+    
+    public static Evento generarCascadaP(int id){
+        int i = s.nextInt(cascadasP.length);
+        return new Evento(
+        id,
+        fallosP[i][0],
+        fallosP[i][1],
+        "Problema derivado de la brecha de seguridad"
+        );
+    }
 }
