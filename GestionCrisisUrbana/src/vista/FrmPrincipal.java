@@ -1115,7 +1115,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloAguaActionPerformed
 
     private void jBFalloVialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloVialActionPerformed
-  
+        Evento c = gestion.generarFalloVial();
+          panelPuntos.agregarPunto(c, AMARILLO);
+          JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + c.toString(),"Fallo en Colapso Vial",JOptionPane.WARNING_MESSAGE);
+          aplicarImpacto(c, false);
+          refrescarDespacho();
     }//GEN-LAST:event_jBFalloVialActionPerformed
 
     private void jBFalloSaludActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSaludActionPerformed
