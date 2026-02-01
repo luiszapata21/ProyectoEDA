@@ -327,7 +327,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         String tipo = e.getTipo().toUpperCase();
         if (tipo.contains("APAGÓN") ||  tipo.contains("CORTE") || tipo.contains("SOBRECARGA") ) {
             modificarBarra(jProgressEnergia, jLabelEnergiaValor, impacto);
-        } else if (tipo.contains("AGUA")) {
+        } else if (tipo.contains("AGUA")|| tipo.contains("PRESION") || tipo.contains("CONTAMINACION")) {
             modificarBarra(jProgressAgua, jLabelAguaValor, impacto);
         } else if (tipo.contains("TRANSPORTE") || tipo.contains("METRO") || tipo.contains("SEMÁFOROS")) {
             modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
@@ -1013,8 +1013,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabelSubtitulo.setForeground(new java.awt.Color(255, 255, 255));
         jLabelSubtitulo.setText("INTEGRIDAD DE SISTEMAS");
 
-        jLabelFoto.setIcon(new javax.swing.ImageIcon("C:\\Users\\ASUS\\Documents\\Netbeans\\ProyectoEDA\\GestionCrisisUrbana\\src\\recursos\\foto.jpg")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1087,7 +1085,17 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloElectricoActionPerformed
 
     private void jBFalloAguaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloAguaActionPerformed
-
+        Evento a = gestion.generarFalloAgua();
+        panelPuntos.agregarPunto(a, AZUL);
+        
+        // 3. Mostrar mensaje al usuario
+        JOptionPane.showMessageDialog(this,
+            "Nuevo evento generado:\n" + a.toString(),
+            "Fallo de Suministro de Agua",
+            JOptionPane.WARNING_MESSAGE
+        );
+        aplicarImpacto(a, false);
+        refrescarDespacho();
     }//GEN-LAST:event_jBFalloAguaActionPerformed
 
     private void jBFalloVialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloVialActionPerformed
@@ -1226,11 +1234,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JProgressBar jProgressSalud;
     private javax.swing.JProgressBar jProgressSeguridad1;
     private javax.swing.JProgressBar jProgressTransporte;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;

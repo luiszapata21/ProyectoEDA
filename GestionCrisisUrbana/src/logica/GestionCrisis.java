@@ -78,6 +78,20 @@ public class GestionCrisis {
         return p;
     }
 
+    // ------------ BOTÓN FALLO AGUA ------------
+    public Evento generarFalloAgua(){
+        // Usamos la clase SuministroAgua que creamos antes
+        Evento a = modelo.SuministroAgua.generarFallo(generarId());
+        despacho.insertar(a);
+        
+        if(vista != null){
+            vista.registrarFallo(a);
+            vista.refrescarDespacho();
+        }
+        iniciarCascadasAutomaticasAGUA(); 
+        return a;
+    }
+
     
     
     
@@ -204,5 +218,38 @@ public class GestionCrisis {
                 generadas++;
             }
         },7000, 6000);
+    }
+    
+    // ------------ CASCADAS DE AGUA (Nuevo) ------------
+    public void iniciarCascadasAutomaticasAGUA() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            int generadas = 0;
+
+            @Override
+            public void run() {
+                if (generadas == 3) {
+                    timer.cancel();
+                    return;
+                }
+                // Generar cascada de agua
+                Evento c = modelo.SuministroAgua.generarCascada(generarId());
+                despacho.insertar(c);
+                if (vista != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.registrarCascada(c);
+                        vista.refrescarDespacho(); 
+                    });
+                }
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "⚠ NUEVA CASCADA DE AGUA:\n" + c.toString(),
+                    "Crisis Hídrica",
+                    JOptionPane.WARNING_MESSAGE);
+
+                generadas++;
+            }
+        }, 7000, 6000); // Mismos tiempos que los otros
     }
   }
