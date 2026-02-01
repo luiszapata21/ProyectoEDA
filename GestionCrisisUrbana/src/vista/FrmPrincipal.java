@@ -273,20 +273,25 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private Color colorPorTipo(Evento e) {
 
         String tipo = e.getTipo().toLowerCase();
-
-        if (tipo.contains("apagón")) {
+        //ELECTRICO
+        if (tipo.contains("apagón") || tipo.contains("corte")  || tipo.contains("sobrecarga")) {
             return ROJO_ALERTA;
         }
-        if (tipo.contains("agua")) {
+        //AGUA
+        if (tipo.contains("agua") || tipo.contains("presion") || tipo.contains("contaminacion") ) {
             return AZUL;
         }
-        if (tipo.contains("metro") || tipo.contains("semáforo") || tipo.contains("transporte")) {
+        //VIAL
+        if (tipo.contains("metro") || tipo.contains("semáforo") || tipo.contains("transporte") || tipo.contains("limpieza")) {
             return AMARILLO;
         }
-        if (tipo.contains("hospitales")) {
+        //SALUD
+        if (tipo.contains("hospitales") || tipo.contains("SALUD") || tipo.contains("pública")) {
             return VERDE_OK;
         }
-        if (tipo.contains("disturbios") || tipo.contains("robo") || tipo.contains("incidente") ) {
+        //SEGURIDAD
+        if (tipo.contains("disturbios") || tipo.contains("robo") || tipo.contains("incidente")  || tipo.contains("centros") 
+                || tipo.contains("armadas") || tipo.contains("medios") || tipo.contains("negocios") || tipo.contains("disturbios por sed")) {
             return MORADO;
         }
         return Color.GRAY;
@@ -325,16 +330,25 @@ public class FrmPrincipal extends javax.swing.JFrame {
         int impacto = impactoPorNivel(e.getNivel());
         if (!subir) impacto = -impacto;
         String tipo = e.getTipo().toUpperCase();
+        //ELECTRICO
         if (tipo.contains("APAGÓN") ||  tipo.contains("CORTE") || tipo.contains("SOBRECARGA") ) {
             modificarBarra(jProgressEnergia, jLabelEnergiaValor, impacto);
-        } else if (tipo.contains("AGUA")|| tipo.contains("PRESION") || tipo.contains("CONTAMINACION")) {
+        } 
+        //AGUA
+        else if (tipo.contains("AGUA")|| tipo.contains("PRESION") || tipo.contains("CONTAMINACION")) {
             modificarBarra(jProgressAgua, jLabelAguaValor, impacto);
-        } else if (tipo.contains("TRANSPORTE") || tipo.contains("METRO") || tipo.contains("SEMÁFOROS")) {
+        }
+        //VIAL
+        else if (tipo.contains("TRANSPORTE") || tipo.contains("METRO") || tipo.contains("SEMÁFOROS") || tipo.contains("LIMPIEZA")) {
             modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
-        } else if (tipo.contains("HOSPITALES") || tipo.contains("SALUD")) {
+        } 
+        //SALUD
+        else if (tipo.contains("HOSPITALES") || tipo.contains("SALUD") || tipo.contains("PÚBLICA")) {
             modificarBarra(jProgressSalud, jLabelSaludValor, impacto);
-        } else if (tipo.contains("DISTURBIOS") || tipo.contains("ROBO") || tipo.contains("INCIDENTE") || tipo.contains("CENTROS")
-                || tipo.contains("ARMADA") || tipo.contains("MEDIOS") || tipo.contains("NEGOCIOS")) {
+        } 
+        //SEGURIDAD
+        else if (tipo.contains("DISTURBIOS") || tipo.contains("ROBO") || tipo.contains("INCIDENTE") || tipo.contains("CENTROS")
+                || tipo.contains("ARMADA") || tipo.contains("MEDIOS") || tipo.contains("NEGOCIOS")  || tipo.contains("DISTURBIOS POR SED")) {
             modificarBarra(jProgressSeguridad1, jLabelSeguridadValor, impacto);
         }
     }
@@ -1012,6 +1026,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLabelSubtitulo.setForeground(new java.awt.Color(255, 255, 255));
         jLabelSubtitulo.setText("INTEGRIDAD DE SISTEMAS");
+
+        jLabelFoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/logo1.jpg"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
