@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JOptionPane;
 import modelo.BrechaSeguridad;
+import modelo.ColapsoVial;
 import modelo.Evento;
 import modelo.Servicio;
 import vista.FrmPrincipal;
@@ -92,7 +93,16 @@ public class GestionCrisis {
         return a;
     }
 
-    
+    public Evento generarFalloVial(){
+        Evento c = ColapsoVial.generarFalloC(generarId());
+        despacho.insertar(c);
+        if(vista != null){
+            vista.registrarFallo(c);
+            vista.refrescarDespacho();
+        }
+        iniciarCascadaAutomaticasVial();
+        return c;
+    }
     
     
     
@@ -251,5 +261,35 @@ public class GestionCrisis {
                 generadas++;
             }
         }, 7000, 6000); // Mismos tiempos que los otros
+    }
+
+    private void iniciarCascadaAutomaticasVial() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            int generadas = 0;
+
+            @Override
+            public void run() {
+                if (generadas == 3) {
+                    timer.cancel();
+                    return;
+                }
+                Evento c = ColapsoVial.generarCascadaP(generarId());
+                despacho.insertar(c);
+                if (vista != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.registrarCascada(c);
+                        vista.refrescarDespacho(); });
+                }
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
+                    "Cascada Vial",
+                    JOptionPane.WARNING_MESSAGE);
+
+                generadas++;
+            }
+        },7000, 6000);
     }
   }
