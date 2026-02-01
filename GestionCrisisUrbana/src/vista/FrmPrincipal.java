@@ -1104,9 +1104,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloVialActionPerformed
 
     private void jBFalloSaludActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSaludActionPerformed
-
-        
-
+        Evento c = gestion.generarFalloMedico();
+          panelPuntos.agregarPunto(c, VERDE_OK);
+          JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + c.toString(),"Fallo en Emergencia Médica",JOptionPane.WARNING_MESSAGE);
+          aplicarImpacto(c, false);
+          refrescarDespacho();
     }//GEN-LAST:event_jBFalloSaludActionPerformed
 
     private void jBFalloSeguridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSeguridadActionPerformed
