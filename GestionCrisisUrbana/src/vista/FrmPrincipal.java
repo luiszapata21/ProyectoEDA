@@ -101,22 +101,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
         initComponents();
         gestion = new GestionCrisis(); 
             
-        
         //PUNTOS
         panelPuntos = new PanelPuntos();
         jLabelFoto.add(panelPuntos);
         panelPuntos.setBounds(0, 0, jLabelFoto.getWidth(), jLabelFoto.getHeight());   
         
-        
-
         //PANELES DE REGISTRO Y DESPACHO
         jPanelDespacho.setLayout( new javax.swing.BoxLayout(jPanelDespacho,javax.swing.BoxLayout.Y_AXIS) );
         jPanelRegsitro.setLayout(new javax.swing.BoxLayout(jPanelRegsitro, javax.swing.BoxLayout.Y_AXIS));
        
-        
+        // Cargar la clase gestion
         gestion= new GestionCrisis();
         gestion.setVista(this);
-         
+        
+        //gestion.iniciarSimulacionAutomatica();
+        
+        
         pilaHistorial = new JLabel[MAX_HISTORIAL];
         topeHistorial = -1;
         
@@ -271,40 +271,42 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }   
     
     private Color colorPorTipo(Evento e) {
-
         String tipo = e.getTipo().toLowerCase();
-        //ELECTRICO
-        if (tipo.contains("apagón") || tipo.contains("corte")  || tipo.contains("sobrecarga")) {
-            return ROJO_ALERTA;
-        }
-        //AGUA
-        if (tipo.contains("agua") || tipo.contains("presion") || tipo.contains("contaminacion") ) {
-            return AZUL;
-        }
-        //VIAL
-        if (tipo.contains("metro") || tipo.contains("semáforo") || tipo.contains("transporte") || tipo.contains("limpieza")) {
-            return AMARILLO;
-        }
-        //SALUD
-        if (tipo.contains("hospitales") || tipo.contains("SALUD") || tipo.contains("pública")) {
-            return VERDE_OK;
-        }
-        //SEGURIDAD
-        if (tipo.contains("disturbios") || tipo.contains("robo") || tipo.contains("incidente")  || tipo.contains("centros") 
-                || tipo.contains("armadas") || tipo.contains("medios") || tipo.contains("negocios") || tipo.contains("disturbios por sed")) {
-            return MORADO;
-        }
-        return Color.GRAY;
+
+         // ELÉCTRICO
+         if (tipo.contains("apagón") ||  tipo.contains("corte") || tipo.contains("sobrecarga") ){
+             return ROJO_ALERTA;
+         }
+         //  AGUA
+         if (tipo.contains("agua") ||tipo.contains("presion") || tipo.contains("contaminacion")){
+             return AZUL;
+         }
+         //  VIAL
+         if ( tipo.contains("metro") ||tipo.contains("semáforos") ||tipo.contains("congestión") ||
+             tipo.contains("colapso") || tipo.contains("sistema") || tipo.contains("limpieza")){
+             return AMARILLO;
+         }
+         //  SALUD (solo visual)
+         if (tipo.contains("hospitales") || tipo.contains("salud") ||tipo.contains("accidentes")){
+             return VERDE_OK;
+         }
+
+         //  SEGURIDAD
+         if (tipo.contains("disturbios") || tipo.contains("robo") ||tipo.contains("incidente") ||
+             tipo.contains("negocios") || tipo.contains("malestar") || tipo.contains("centros") || tipo.contains("miedo")){
+             return MORADO;
+         }
+
+         return Color.GRAY;
+        
     }
 
     
     // --------- BARRAS DE PORCENTAJE -----
     private void actualizarEventos(int delta) {
         eventosActivos += delta;
-
         if (eventosActivos < 0) eventosActivos = 0;
         if (eventosActivos > MAX_EVENTOS) eventosActivos = MAX_EVENTOS;
-
         jProgressSEventos.setValue(eventosActivos);
         jLabelEventosValor.setText(String.valueOf(eventosActivos));
     }
@@ -326,29 +328,32 @@ public class FrmPrincipal extends javax.swing.JFrame {
         label.setText(valor + " %");
     }
     
+    //ACTUALIZA LAS BARRAS DE PORCENTAJE
     private void aplicarImpacto(Evento e, boolean subir) {
         int impacto = impactoPorNivel(e.getNivel());
         if (!subir) impacto = -impacto;
         String tipo = e.getTipo().toUpperCase();
-        //ELECTRICO
-        if (tipo.contains("APAGÓN") ||  tipo.contains("CORTE") || tipo.contains("SOBRECARGA") ) {
+
+        //  ELÉCTRICO (solo fallos eléctricos directos)
+        if (tipo.contains("APAGÓN") ||tipo.contains("CORTE") || tipo.contains("SOBRECARGA")){
             modificarBarra(jProgressEnergia, jLabelEnergiaValor, impacto);
-        } 
-        //AGUA
-        else if (tipo.contains("AGUA")|| tipo.contains("PRESION") || tipo.contains("CONTAMINACION")) {
+        }
+        //  AGUA
+        else if (tipo.contains("AGUA") || tipo.contains("PRESION") || tipo.contains("CONTAMINACION")){
             modificarBarra(jProgressAgua, jLabelAguaValor, impacto);
         }
-        //VIAL
-        else if (tipo.contains("TRANSPORTE") || tipo.contains("METRO") || tipo.contains("SEMÁFOROS") || tipo.contains("LIMPIEZA")) {
+        //  VIAL
+        else if ( tipo.contains("METRO") || tipo.contains("SEMÁFOROS") || tipo.contains("CONGESTIÓN") ||
+            tipo.contains("COLAPSO") ||tipo.contains("SISTEMA") ||tipo.contains("LIMPIEZA") ){
             modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
-        } 
-        //SALUD
-        else if (tipo.contains("HOSPITALES") || tipo.contains("SALUD") || tipo.contains("PÚBLICA")) {
+        }
+        // SALUD (solo impacto, NO clase propia)
+        else if (tipo.contains("HOSPITALES") ||tipo.contains("SALUD") || tipo.contains("ACCIDENTES")){
             modificarBarra(jProgressSalud, jLabelSaludValor, impacto);
-        } 
-        //SEGURIDAD
-        else if (tipo.contains("DISTURBIOS") || tipo.contains("ROBO") || tipo.contains("INCIDENTE") || tipo.contains("CENTROS")
-                || tipo.contains("ARMADA") || tipo.contains("MEDIOS") || tipo.contains("NEGOCIOS")  || tipo.contains("DISTURBIOS POR SED")) {
+        }
+        //  SEGURIDAD
+        else if (tipo.contains("DISTURBIOS") || tipo.contains("ROBO") || tipo.contains("INCIDENTE") ||
+            tipo.contains("NEGOCIOS") ||tipo.contains("MALESTAR") || tipo.contains("CENTROS") ||tipo.contains("MIEDO")){
             modificarBarra(jProgressSeguridad1, jLabelSeguridadValor, impacto);
         }
     }
@@ -363,10 +368,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         panel.setBackground(new Color(240, 240, 240));
         panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         panel.setLayout(new BorderLayout());
-
         JLabel label = new JLabel("  " + texto);
         label.setForeground(Color.BLACK);
-
         panel.add(label, BorderLayout.CENTER);
         return panel;
     }
@@ -398,16 +401,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     public void refrescarRegistro() {
         jPanelRegsitro.removeAll();
-
         NodoEvento aux = gestion.getRegistro().getCima(); // pila (último arriba)
         while (aux != null) {
             agregarProblemaAlRegistro(aux.info.toString());
             aux = aux.liga;
         }
-
         jPanelRegsitro.revalidate();
         jPanelRegsitro.repaint();
-        
     }
 
     
@@ -434,20 +434,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
         
     }
     
-    
-    
-    
     public void refrescarHistorial() {
         jPanelHistorial.removeAll();
         int y = 10;
         for (int i = 0; i <= topeHistorial; i++) {
             JLabel lbl = pilaHistorial[i];
-            lbl.setBounds(
-                10,
-                y,
-                500,
-                25
-            );
+            lbl.setBounds(10,y,500,25 );
             jPanelHistorial.add(lbl);
             y += 28;
         }
@@ -457,24 +449,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     private String horaActual() {
         return java.time.LocalTime.now()
-                .withNano(0)
-                .toString();
+                .withNano(0).toString();
     }
     
     
     //--------- METODOS DE REGISTROS
     
     public void registrarFallo(Evento e) {
-        agregarAlHistorial(
-            "[" + horaActual() + "] ❌ FALLO: " + e.getNivel() + " | " + e.getTipo()
-        ); 
+        agregarAlHistorial("[" + horaActual() + "] ❌ FALLO: " + e.getNivel() + " | " + e.getTipo()); 
         actualizarEventos(+1);
     }
 
     public void registrarCascada(Evento e) {
-        agregarAlHistorial(
-            "[" + horaActual() + "] ⚠ CASCADA: " + e.getNivel() + " | " + e.getTipo()
-        );
+        agregarAlHistorial("[" + horaActual() + "] ⚠ CASCADA: " + e.getNivel() + " | " + e.getTipo());
         Color color = colorPorTipo(e);
         panelPuntos.agregarPunto(e, colorPorTipo(e));
         actualizarEventos(+1);
@@ -482,20 +469,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
 
     public void registrarAtendido(Evento e) {
-        agregarAlHistorial(
-            "[" + horaActual() + "] ✅ ATENDIDO: " + e.getNivel() + " | " + e.getTipo()
-        );
+        agregarAlHistorial("[" + horaActual() + "] ✅ ATENDIDO: " + e.getNivel() + " | " + e.getTipo());
         actualizarEventos(-1);
         panelPuntos.quitarPunto(e);
     }
 
     public void registrarDeshecho(Evento e) {
-        agregarAlHistorial(
-            "[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo()
-        );
+        agregarAlHistorial( "[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo());
         actualizarEventos(+1);
         panelPuntos.restaurarPunto(e);
     }
+    
+    
+    
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1089,27 +1075,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
  
     
+    // ----------BOTONES-----------
     private void jBFalloElectricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloElectricoActionPerformed
-        
+
        Evento e = gestion.generarFalloElectrico();
        panelPuntos.agregarPunto(e, ROJO_ALERTA);
         JOptionPane.showMessageDialog( this, "Nuevo evento generado:\n" + e.toString(),"Fallo Eléctrico",JOptionPane.WARNING_MESSAGE);
         aplicarImpacto(e, false);
         refrescarDespacho();
-        
-    
     }//GEN-LAST:event_jBFalloElectricoActionPerformed
 
     private void jBFalloAguaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloAguaActionPerformed
         Evento a = gestion.generarFalloAgua();
         panelPuntos.agregarPunto(a, AZUL);
-        
+       
         // 3. Mostrar mensaje al usuario
-        JOptionPane.showMessageDialog(this,
-            "Nuevo evento generado:\n" + a.toString(),
-            "Fallo de Suministro de Agua",
-            JOptionPane.WARNING_MESSAGE
-        );
+        JOptionPane.showMessageDialog(this, "Nuevo evento generado:\n" + a.toString(), "Fallo de Suministro de Agua",JOptionPane.WARNING_MESSAGE );
         aplicarImpacto(a, false);
         refrescarDespacho();
     }//GEN-LAST:event_jBFalloAguaActionPerformed
@@ -1140,11 +1121,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         Evento e = gestion.atender();
         if (e != null) {
-            JOptionPane.showMessageDialog(this,
-                "Atendido:\n" + e.toString(),
-                "Atención",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, "Atendido:\n" + e.toString(),"Atención",JOptionPane.INFORMATION_MESSAGE);
         }
         refrescarDespacho();
         refrescarRegistro();
@@ -1158,8 +1135,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
             refrescarRegistro();
             aplicarImpacto(e, false);
         }
-        
-
     }//GEN-LAST:event_jBDeshacerActionPerformed
 
     

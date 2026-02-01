@@ -23,7 +23,7 @@ public class BrechaSeguridad {
     // ===== cascadas =====
     private static String[][] cascadasP = {
           {"Centros comerciales llenos", "CRÍTICO", "Aglomeración de personas"},
-          {"Robo a mano aramada", "CRÍTICO", "Estado peligroso en la ciudad"},
+          {"Robo a mano armada", "CRÍTICO", "Estado peligroso en la ciudad"},
           {"Miedo Ciudadano", "MEDIO", "Ciudad inestable"},
           {"Negocios desprotegidos", "MEDIO", "Vacunadores"}
     };
@@ -38,13 +38,20 @@ public class BrechaSeguridad {
         );
     }
     
-    public static Evento generarCascadaP(int id){
-        int i = s.nextInt(cascadasP.length);
+    public static Evento generarCascadaP(int id, String nivelFallo){
+         int i;
+        while (true) {
+            i = s.nextInt(cascadasP.length);
+            String nivel = cascadasP[i][1];
+            if (nivelFallo.equals("CRÍTICO")) break;
+            if (nivelFallo.equals("MEDIO") && nivel.equals("MEDIO")) break;
+            if (nivelFallo.equals("BAJO") && nivel.equals("BAJO")) break;
+        }
         return new Evento(
-        id,
-        fallosP[i][0],
-        fallosP[i][1],
-        "Problema derivado de la brecha de seguridad"
+            id,
+            cascadasP[i][0],
+            cascadasP[i][1],
+            "Problema derivado de la brecha de seguridad"
         );
     }
 }

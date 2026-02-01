@@ -38,13 +38,20 @@ public class ColapsoVial {
         );
     }
     
-    public static Evento generarCascadaP(int id){
-        int i = c.nextInt(cascadasC.length);
+    public static Evento generarCascadaP(int id, String nivelFallo){
+        int i;
+        while (true) {
+            i = c.nextInt(cascadasC.length);
+            String nivel = cascadasC[i][1];
+            if (nivelFallo.equals("CRÍTICO")) break;
+            if (nivelFallo.equals("MEDIO") && nivel.equals("MEDIO")) break;
+            if (nivelFallo.equals("BAJO") && nivel.equals("BAJO")) break;
+        }
         return new Evento(
-        id,
-        fallosC[i][0],
-        fallosC[i][1],
-        "Problema derivado del colapso vial"
+            id,
+            cascadasC[i][0],
+            cascadasC[i][1],
+            "Problema derivado del colapso vial"
         );
     }
 }

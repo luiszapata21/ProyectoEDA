@@ -16,6 +16,7 @@ import modelo.BrechaSeguridad;
 import modelo.ColapsoVial;
 import modelo.Evento;
 import modelo.Servicio;
+import modelo.SuministroAgua;
 import vista.FrmPrincipal;
 
 /**
@@ -56,6 +57,7 @@ public class GestionCrisis {
     // ------------BOTÓN FALLO ELÉCTRICO ------------
     public Evento generarFalloElectrico() {
         Evento e = FallosElectricos.generarFallo(generarId());
+        falloActivo = e;
         despacho.insertar(e);
         
         if (vista != null) {
@@ -70,6 +72,7 @@ public class GestionCrisis {
     // ------------BOTÓN FALLO SEGURIDAD ------------
     public Evento generarFalloSeguridad(){
         Evento p = BrechaSeguridad.generarFalloP(generarId());
+        falloActivo = p;
         despacho.insertar(p);
         if(vista != null){
             vista.registrarFallo(p);
@@ -82,7 +85,8 @@ public class GestionCrisis {
     // ------------ BOTÓN FALLO AGUA ------------
     public Evento generarFalloAgua(){
         // Usamos la clase SuministroAgua que creamos antes
-        Evento a = modelo.SuministroAgua.generarFallo(generarId());
+        Evento a = SuministroAgua.generarFallo(generarId());
+        falloActivo=a;
         despacho.insertar(a);
         
         if(vista != null){
@@ -95,6 +99,7 @@ public class GestionCrisis {
 
     public Evento generarFalloVial(){
         Evento c = ColapsoVial.generarFalloC(generarId());
+        falloActivo=c;
         despacho.insertar(c);
         if(vista != null){
             vista.registrarFallo(c);
@@ -169,37 +174,44 @@ public class GestionCrisis {
 
     
     //------------ INICIAR CASCADA ------------
+    
+    //CASCADAS ELECTRICAS
     public void iniciarCascadasAutomaticasElectrica() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             int generadas = 0;
-
             @Override
             public void run() {
                 if (generadas == 3) {
                     timer.cancel();
                     return;
                 }
-                Evento c = FallosElectricos.generarCascada(generarId());
+                // 👇 AQUÍ ESTÁ LA DIFERENCIA
+                Evento c = FallosElectricos.generarCascada(
+                    generarId(),
+                    falloActivo.getNivel()
+                );
                 despacho.insertar(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
-                        vista.refrescarDespacho(); });
+                        vista.refrescarDespacho();
+                    });
                 }
-
+                 // 👇 MENSAJE SE MANTIENE
                 JOptionPane.showMessageDialog(
                     null,
                     "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
                     "Cascada eléctrica",
-                    JOptionPane.WARNING_MESSAGE);
-
+                    JOptionPane.WARNING_MESSAGE
+                );
                 generadas++;
             }
-        },7000, 6000);
+        }, 7000, 6000);
     }
     
     
+    //CASCADAS DE SEGURIDAD
     public void iniciarCascadasAutomaticasSEGURIDAD() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -211,7 +223,7 @@ public class GestionCrisis {
                     timer.cancel();
                     return;
                 }
-                Evento c = BrechaSeguridad.generarCascadaP(generarId());
+                Evento c = BrechaSeguridad.generarCascadaP(generarId() , falloActivo.getNivel());
                 despacho.insertar(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
@@ -230,7 +242,7 @@ public class GestionCrisis {
         },7000, 6000);
     }
     
-    // ------------ CASCADAS DE AGUA (Nuevo) ------------
+    //CASCADAS DE AGUA 
     public void iniciarCascadasAutomaticasAGUA() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -243,7 +255,7 @@ public class GestionCrisis {
                     return;
                 }
                 // Generar cascada de agua
-                Evento c = modelo.SuministroAgua.generarCascada(generarId());
+                Evento c = modelo.SuministroAgua.generarCascada(generarId(),  falloActivo.getNivel());
                 despacho.insertar(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
@@ -263,6 +275,7 @@ public class GestionCrisis {
         }, 7000, 6000); // Mismos tiempos que los otros
     }
 
+    //CASCADAS VIAL
     private void iniciarCascadaAutomaticasVial() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -274,7 +287,7 @@ public class GestionCrisis {
                     timer.cancel();
                     return;
                 }
-                Evento c = ColapsoVial.generarCascadaP(generarId());
+                Evento c = ColapsoVial.generarCascadaP(generarId(), falloActivo.getNivel());
                 despacho.insertar(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
@@ -292,4 +305,88 @@ public class GestionCrisis {
             }
         },7000, 6000);
     }
+    
+    
+    /*
+    // ------------ MODO AUTOMÁTICO ------------
+    public void iniciarSimulacionAutomatica() {
+        Timer timer = new Timer();
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                int opcion = (int) (Math.random() * 4);
+
+                Evento e = null;
+
+                switch (opcion) {
+                    case 0:
+                        e = generarFalloElectrico();
+                        break;
+
+                    case 1:
+                        e = generarFalloAgua();
+                        break;
+
+                    case 2:
+                        e = generarFalloSeguridad();
+                        break;
+
+                    case 3:
+                        e = generarFalloVial();
+                        break;
+                }
+
+                if (vista != null && e != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.refrescarDespacho();
+                    });
+                }
+            }
+        }, 3000, 10000); // empieza en 3s, luego cada 10s
+    }
+    
+    
+    private boolean esCascada(Evento e) {
+        String tipo = e.getTipo().toUpperCase();
+
+        // CASCADAS ELÉCTRICAS
+        if (tipo.contains("HOSPITALES") ||
+            tipo.contains("METRO") ||
+            tipo.contains("SEMÁFOROS") ||
+            tipo.contains("AGUA INTERRUMPIDA")) {
+            return true;
+        }
+
+        // CASCADAS DE AGUA
+        if (tipo.contains("SALUD") ||
+            tipo.contains("SED") ||
+            tipo.contains("LIMPIEZA")) {
+            return true;
+        }
+
+        // CASCADAS VIALES
+        if (tipo.contains("ACCIDENTES") ||
+            tipo.contains("SISTEMA") ||
+            tipo.contains("MALESTAR")) {
+            return true;
+        }
+
+        // CASCADAS DE SEGURIDAD
+        if (tipo.contains("MIEDO") ||
+            tipo.contains("CENTROS") ||
+            tipo.contains("NEGOCIOS")) {
+            return true;
+        }
+
+        return false; // si no es cascada → es fallo
+    }
+*/
+    
+    
+    
+    
+    
+    
   }

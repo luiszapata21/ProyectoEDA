@@ -21,7 +21,7 @@ public class SuministroAgua {
 
     // ===== CASCADAS  =====
     private static String[][] cascadas = {
-          {"SALUD pública riesgo", "MEDIO", "Infecciones posibles"},   
+          {"SALUD pública riesgo", "CRÍTICO", "Infecciones posibles"},   
           {"Disturbios por sed", "MEDIO", "Protestas en calles"},     
           {"Limpieza Metro parada", "BAJO", "Suciedad en transporte"} 
     };
@@ -31,13 +31,20 @@ public class SuministroAgua {
         return new Evento(id, fallos[i][0], fallos[i][1], fallos[i][2]);
     }
 
-    public static Evento generarCascada(int id) {
-        int i = r.nextInt(cascadas.length);
-        // El primer parámetro (cascadas[i][0]) es el TIPO.
-        // Al pasar "Hospitales sin agua", la vista lo detectará como daño a SALUD.
+    public static Evento generarCascada(int id, String nivelFallo) {
+        int i;
+        while (true) {
+            i = r.nextInt(cascadas.length);
+            String nivel = cascadas[i][1];
+
+            if (nivelFallo.equals("CRÍTICO")) break;
+            if (nivelFallo.equals("MEDIO") && !nivel.equals("CRÍTICO")) break;
+            if (nivelFallo.equals("BAJO") && nivel.equals("BAJO")) break;
+        }
+
         return new Evento(
             id,
-            cascadas[i][0], 
+            cascadas[i][0],
             cascadas[i][1],
             "Problema derivado del suministro de agua"
         );
