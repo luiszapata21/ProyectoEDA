@@ -14,6 +14,7 @@ import java.util.TimerTask;
 import javax.swing.JOptionPane;
 import modelo.BrechaSeguridad;
 import modelo.ColapsoVial;
+import modelo.EmergenciaMedica;
 import modelo.Evento;
 import modelo.Servicio;
 import modelo.SuministroAgua;
@@ -96,7 +97,8 @@ public class GestionCrisis {
         iniciarCascadasAutomaticasAGUA(); 
         return a;
     }
-
+    
+    // ------------ BOTÓN FALLO VIAL------------
     public Evento generarFalloVial(){
         Evento c = ColapsoVial.generarFalloC(generarId());
         falloActivo=c;
@@ -109,8 +111,18 @@ public class GestionCrisis {
         return c;
     }
     
-    
-    
+    // ------------ BOTÓN FALLO EMERGENCIA MEDICA ------------
+    public Evento generarFalloMedico(){
+        Evento m = EmergenciaMedica.generarFalloM(generarId());
+        falloActivo=m;
+        despacho.insertar(m);
+        if(vista != null){
+            vista.registrarFallo(m);
+            vista.refrescarDespacho();
+        }
+        iniciarCascadaAutomaticaMedica();
+        return m;
+    }
     
     
     
@@ -306,7 +318,36 @@ public class GestionCrisis {
         },7000, 6000);
     }
     
-    
+    //Cascada de Emergencia Médica
+    private void iniciarCascadaAutomaticaMedica(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            int generadas = 0;
+
+            @Override
+            public void run() {
+                if (generadas == 3) {
+                    timer.cancel();
+                    return;
+                }
+                Evento c = EmergenciaMedica.generarCascadaM(generarId(), falloActivo.getNivel());
+                despacho.insertar(c);
+                if (vista != null) {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.registrarCascada(c);
+                        vista.refrescarDespacho(); });
+                }
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
+                    "Emergencia Médica",
+                    JOptionPane.WARNING_MESSAGE);
+
+                generadas++;
+            }
+        },7000, 6000);
+    }
     /*
     // ------------ MODO AUTOMÁTICO ------------
     public void iniciarSimulacionAutomatica() {
