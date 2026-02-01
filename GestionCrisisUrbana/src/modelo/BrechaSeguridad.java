@@ -15,7 +15,7 @@ public class BrechaSeguridad {
 
     // ===== FALLOS PRINCIPALES =====
     private static String[][] fallosP = {
-        {"Disturbios masivos", "CRÍTICO", "Perdoda de control de las personas"},
+        {"Disturbios masivos", "CRÍTICO", "Perdida de control de las personas"},
         {"Robo organizado", "MEDIO", "Miedo en la población"},
         {"Incidente aislado", "BAJO", "Ingresos delictivos de gente"}      
     };
