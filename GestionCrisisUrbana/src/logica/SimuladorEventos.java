@@ -21,21 +21,6 @@ public class SimuladorEventos {
         this.pila = pila;
     }
 
-    public Evento generarEventoElectrico() {
-        int x = (int)(Math.random() * 400);
-        int y = (int)(Math.random() * 300);
-
-        Evento e = new Evento(
-            1,
-            "Eléctrico",
-            "3",
-            "Fallo en subestación"
-        );
-
-        cola.insertar(e);
-        return e;
-    }
-
     public void atenderEventoConTiempo(Runnable onAtendido) {
 
         int tiempo = 2000 + (int)(Math.random() * 4000);
