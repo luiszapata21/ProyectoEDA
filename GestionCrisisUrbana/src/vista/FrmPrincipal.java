@@ -1108,11 +1108,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloSaludActionPerformed
 
     private void jBFalloSeguridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSeguridadActionPerformed
-          Evento b = gestion.generarFalloSeguridad();
-          panelPuntos.agregarPunto(b, MORADO);
-          JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + b.toString(),"Fallo de Seguridad",JOptionPane.WARNING_MESSAGE);
-          aplicarImpacto(b, false);
-          refrescarDespacho();
+          Evento b = gestion.generarFalloSeguridad(); // Genera un nuevo evento de brecha o fallo de seguridad a través del llamado de su clase
+          panelPuntos.agregarPunto(b, MORADO);// Agrega un punto visual en el mapa para representar el evento generado
+          JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + b.toString(),"Fallo de Seguridad",JOptionPane.WARNING_MESSAGE); 
+          // Muestra un mensaje emergente informando al usuario que se ha generado un nuevo evento de fallo de seguridad
+          aplicarImpacto(b, false);  // El parámetro 'false' indica que se trata de un evento principal
+          refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO 
     }//GEN-LAST:event_jBFalloSeguridadActionPerformed
 
     private void jBAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAtenderActionPerformed
