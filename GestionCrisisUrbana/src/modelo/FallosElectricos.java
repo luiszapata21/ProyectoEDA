@@ -5,7 +5,6 @@
 package modelo;
 
 import java.util.Random;
-import modelo.Evento;
 
 /**
  *
@@ -43,16 +42,13 @@ public class FallosElectricos {
     // ===== UNA CASCADA ALEATORIA =====
     public static Evento generarCascada(int id, String nivelFallo) {
         int i;
-
         while (true) {
             i = r.nextInt(cascadas.length);
             String nivelCascada = cascadas[i][1];
-
             if (nivelFallo.equals("CRÍTICO")) break;
             if (nivelFallo.equals("MEDIO") && nivelCascada.equals("MEDIO")) break;
             if (nivelFallo.equals("BAJO") && nivelCascada.equals("MEDIO")) break;
         }
-
         return new Evento(
             id,
             cascadas[i][0],

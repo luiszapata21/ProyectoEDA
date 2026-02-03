@@ -5,9 +5,7 @@
 package logica;
 
 import modelo.FallosElectricos;
-import Nodos.NodoServicio;
 import estructuras.ColaEventos;
-import estructuras.ListaServicios;
 import estructuras.PilaEventos;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +14,6 @@ import modelo.BrechaSeguridad;
 import modelo.ColapsoVial;
 import modelo.EmergenciaMedica;
 import modelo.Evento;
-import modelo.Servicio;
 import modelo.SuministroAgua;
 import vista.FrmPrincipal;
 
@@ -31,6 +28,10 @@ public class GestionCrisis {
     private Evento falloActivo;
     private int id;
     private FrmPrincipal vista;
+    private ColaEventos despachoCriticos = new ColaEventos();
+    private ColaEventos despachoMedios   = new ColaEventos();
+    private ColaEventos despachoBajos    = new ColaEventos();
+
 
     public GestionCrisis() {
         despacho = new ColaEventos();
@@ -39,6 +40,7 @@ public class GestionCrisis {
         id = 1;
     }
 
+    //GETTERS Y SETTERES---------------------
     public int generarId() {
         return id++;
     }
@@ -54,18 +56,39 @@ public class GestionCrisis {
     public void setVista(FrmPrincipal vista) {
         this.vista = vista;
     }
+    
+    public ColaEventos getDespachoOrdenado() {
+        ColaEventos total = new ColaEventos();
 
+        copiarCola(despachoCriticos, total);
+        copiarCola(despachoMedios, total);
+        copiarCola(despachoBajos, total);
+
+        return total;
+    }
+    
+    
+    
+    private void copiarCola(ColaEventos origen, ColaEventos destino) {
+        int n = origen.getTamanio();
+        for (int i = 0; i < n; i++) {
+            Evento e = origen.eliminar();
+            destino.insertar(e);
+            origen.insertar(e);
+        }
+    }
+
+    //------------METODOS DE BOTONES-----------------
+    
     // ------------BOTÓN FALLO ELÉCTRICO ------------
     public Evento generarFalloElectrico() {
         Evento e = FallosElectricos.generarFallo(generarId());
         falloActivo = e;
-        despacho.insertar(e);
-        
+        insertarEnDespacho(e);
         if (vista != null) {
             vista.registrarFallo(e);
             vista.refrescarDespacho();
         }
-        
         iniciarCascadasAutomaticasElectrica();
         return e;
     }
@@ -74,7 +97,7 @@ public class GestionCrisis {
     public Evento generarFalloSeguridad(){
         Evento p = BrechaSeguridad.generarFalloP(generarId());
         falloActivo = p;
-        despacho.insertar(p);
+        insertarEnDespacho(p);
         if(vista != null){
             vista.registrarFallo(p);
             vista.refrescarDespacho();
@@ -85,11 +108,9 @@ public class GestionCrisis {
 
     // ------------ BOTÓN FALLO AGUA ------------
     public Evento generarFalloAgua(){
-        // Usamos la clase SuministroAgua que creamos antes
         Evento a = SuministroAgua.generarFallo(generarId());
         falloActivo=a;
-        despacho.insertar(a);
-        
+        insertarEnDespacho(a);
         if(vista != null){
             vista.registrarFallo(a);
             vista.refrescarDespacho();
@@ -102,7 +123,7 @@ public class GestionCrisis {
     public Evento generarFalloVial(){
         Evento c = ColapsoVial.generarFalloC(generarId());
         falloActivo=c;
-        despacho.insertar(c);
+        insertarEnDespacho(c);
         if(vista != null){
             vista.registrarFallo(c);
             vista.refrescarDespacho();
@@ -115,7 +136,7 @@ public class GestionCrisis {
     public Evento generarFalloMedico(){
         Evento m = EmergenciaMedica.generarFalloM(generarId());
         falloActivo=m;
-        despacho.insertar(m);
+        insertarEnDespacho(m);
         if(vista != null){
             vista.registrarFallo(m);
             vista.refrescarDespacho();
@@ -126,55 +147,44 @@ public class GestionCrisis {
     
     
     
+    //-------LISTAS DE PRIORIDADES-----------
     
     
     // ------------ ATENDER (CRÍTICO → MEDIO → BAJO) ------------
     public Evento atender() {
-        Evento e = sacarPorNivel("CRÍTICO");
-        if (e == null) e = sacarPorNivel("MEDIO");
-        if (e == null) e = despacho.eliminar();
+        Evento e = null;
+
+        // Primero los CRITICOS
+        if (!despachoCriticos.estaVacia()) {
+            e = despachoCriticos.eliminar();
+        }
+        // Segundo los MEDIOS
+        else if (!despachoMedios.estaVacia()) {
+            e = despachoMedios.eliminar();
+        }
+        // Tercero los BAJOS
+        else if (!despachoBajos.estaVacia()) {
+            e = despachoBajos.eliminar();
+        }
 
         if (e != null) {
-            registro.apilar(e);
-                if (vista != null) {
-                    vista.registrarAtendido(e);
-                }
-            liberarCascada();
-        }
-        return e;
-    }
+            registro.apilar(e); // pila de atendidos
 
-    // ------------ SACAR POR NIVEL ------------
-    private Evento sacarPorNivel(String nivel) {
-        Evento encontrado = null;
-        int n = despacho.getTamanio();
-
-        for (int i = 0; i < n; i++) {
-            Evento e = despacho.eliminar();
-            if (encontrado == null && e.getNivel().equals(nivel)) {
-                encontrado = e;
-            } else {
-                despacho.insertar(e);
+            if (vista != null) {
+                vista.registrarAtendido(e);
+                vista.refrescarDespacho();
+                vista.refrescarRegistro();
             }
         }
-        return encontrado;
+        return e;
+        
     }
 
-    // ------------ LIBERA UNA CASCADA ------------
-    private void liberarCascada() {
-        if (Math.random() < 0.5) { // aleatorio
-            Evento c = cascadasPendientes.eliminar();
-            if (c != null) despacho.insertar(c);
-        }
-    }
-
-    
-    
     //------------ DESHACCER ULTIMO ------------
     public Evento deshacerUltimo() {
        Evento e = registro.desapilar(); // saca el último
        if (e != null) {
-           despacho.insertar(e); // vuelve al despacho
+           insertarEnDespacho(e); // vuelve al despacho
                 if (vista != null) {
                     vista.registrarDeshecho(e);
                     vista.refrescarDespacho();
@@ -184,6 +194,23 @@ public class GestionCrisis {
        return e;
    }
 
+    
+    private void insertarEnDespacho(Evento e) {
+        String nivel = e.getNivel().toUpperCase();
+        switch (nivel) {
+            case "CRÍTICO":
+                despachoCriticos.insertar(e);
+                break;
+            case "MEDIO":
+                despachoMedios.insertar(e);
+                break;
+            case "BAJO":
+                despachoBajos.insertar(e);
+                break;
+        }
+    }
+    
+    
     
     //------------ INICIAR CASCADA ------------
     
@@ -198,12 +225,8 @@ public class GestionCrisis {
                     timer.cancel();
                     return;
                 }
-                // 👇 AQUÍ ESTÁ LA DIFERENCIA
-                Evento c = FallosElectricos.generarCascada(
-                    generarId(),
-                    falloActivo.getNivel()
-                );
-                despacho.insertar(c);
+                Evento c = FallosElectricos.generarCascada(generarId(),falloActivo.getNivel());
+                insertarEnDespacho(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
@@ -211,17 +234,11 @@ public class GestionCrisis {
                     });
                 }
                  // 👇 MENSAJE SE MANTIENE
-                JOptionPane.showMessageDialog(
-                    null,
-                    "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
-                    "Cascada eléctrica",
-                    JOptionPane.WARNING_MESSAGE
-                );
+                JOptionPane.showMessageDialog(null,"⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),"Cascada eléctrica",JOptionPane.WARNING_MESSAGE);
                 generadas++;
             }
         }, 7000, 6000);
     }
-    
     
     //CASCADAS DE SEGURIDAD
     public void iniciarCascadasAutomaticasSEGURIDAD() {
@@ -236,7 +253,7 @@ public class GestionCrisis {
                     return;
                 }
                 Evento c = BrechaSeguridad.generarCascadaP(generarId() , falloActivo.getNivel());
-                despacho.insertar(c);
+                insertarEnDespacho(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
@@ -268,7 +285,7 @@ public class GestionCrisis {
                 }
                 // Generar cascada de agua
                 Evento c = modelo.SuministroAgua.generarCascada(generarId(),  falloActivo.getNivel());
-                despacho.insertar(c);
+                insertarEnDespacho(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
@@ -300,7 +317,7 @@ public class GestionCrisis {
                     return;
                 }
                 Evento c = ColapsoVial.generarCascadaP(generarId(), falloActivo.getNivel());
-                despacho.insertar(c);
+                insertarEnDespacho(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
@@ -331,7 +348,7 @@ public class GestionCrisis {
                     return;
                 }
                 Evento c = EmergenciaMedica.generarCascadaM(generarId(), falloActivo.getNivel());
-                despacho.insertar(c);
+                insertarEnDespacho(c);
                 if (vista != null) {
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
@@ -348,6 +365,7 @@ public class GestionCrisis {
             }
         },7000, 6000);
     }
+    
     /*
     // ------------ MODO AUTOMÁTICO ------------
     public void iniciarSimulacionAutomatica() {
@@ -424,10 +442,5 @@ public class GestionCrisis {
         return false; // si no es cascada → es fallo
     }
 */
-    
-    
-    
-    
-    
     
   }

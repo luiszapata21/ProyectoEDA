@@ -46,42 +46,11 @@ public class Evento {
         return descripcion;
     }
 
-    
-    
-
     @Override
        public String toString() {
            return        tipo + " | Nivel: " + nivel + " | " + descripcion;
        }
        
        
-       
-       
-       
-       
-       
-       
-       
-       
-       /*
-
-
-
-
-
-       ESTO ES UNA PRUEBA XD
-
-**
-       
-       
-       
-       
-       
-       
-       
-   */ 
-       
-       
-       //confirmen XD
 }
 

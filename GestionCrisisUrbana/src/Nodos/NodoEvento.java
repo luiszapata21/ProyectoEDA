@@ -10,6 +10,7 @@ import modelo.Evento;
  *
  * @author ASUS
  */
+
 public class NodoEvento {
     public Evento info;
     public NodoEvento liga;

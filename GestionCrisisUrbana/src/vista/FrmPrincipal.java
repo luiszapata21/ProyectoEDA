@@ -7,7 +7,6 @@ package vista;
 import Nodos.NodoEvento;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -15,19 +14,14 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.Timer;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
 import logica.GestionCrisis;
 import modelo.Evento;
-import modelo.TipoProblema;
 
 
 /**
@@ -287,7 +281,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
              return AMARILLO;
          }
          //  SALUD (solo visual)
-         if (tipo.contains("hospitales") || tipo.contains("salud") ||tipo.contains("accidentes")){
+         if (tipo.contains("hospitales") || tipo.contains("salud") ||tipo.contains("accidentes")|| tipo.contains("saturación") 
+                || tipo.contains("falta") || tipo.contains("retrasos") || tipo.contains("atención") 
+                || tipo.contains("camas") || tipo.contains("dificultad") || tipo.contains("propagación")){
              return VERDE_OK;
          }
 
@@ -313,8 +309,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     private int impactoPorNivel(String nivel) {
         switch (nivel) {
-            case "CRÍTICO": return 30;
-            case "MEDIO":   return 15;
+            case "CRÍTICO": return 20;
+            case "MEDIO":   return 10;
             case "BAJO":    return 5;
             default:        return 0;
         }
@@ -348,7 +344,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
             modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
         }
         // SALUD (solo impacto, NO clase propia)
-        else if (tipo.contains("HOSPITALES") ||tipo.contains("SALUD") || tipo.contains("ACCIDENTES")){
+        else if (tipo.contains("HOSPITALES") ||tipo.contains("SALUD") || tipo.contains("ACCIDENTES") || tipo.contains("SATURACIÓN") 
+                || tipo.contains("FALTA") || tipo.contains("RETRASOS") || tipo.contains("ATENCIÓN") 
+                || tipo.contains("CAMAS") || tipo.contains("DIFICULTAD") || tipo.contains("PROPAGACIÓN")){
             modificarBarra(jProgressSalud, jLabelSaludValor, impacto);
         }
         //  SEGURIDAD
@@ -390,22 +388,25 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     public void refrescarDespacho() {
          jPanelDespacho.removeAll();
-        NodoEvento aux = gestion.getDespacho().getFrente();
+
+        NodoEvento aux = gestion.getDespachoOrdenado().getFrente();
         while (aux != null) {
             agregarProblemaAlDespacho(aux.info.toString());
             aux = aux.liga;
         }
+
         jPanelDespacho.revalidate();
         jPanelDespacho.repaint();
+        
     }
     
     public void refrescarRegistro() {
         jPanelRegsitro.removeAll();
         NodoEvento aux = gestion.getRegistro().getCima(); // pila (último arriba)
-        while (aux != null) {
-            agregarProblemaAlRegistro(aux.info.toString());
-            aux = aux.liga;
-        }
+            while (aux != null) {
+                agregarProblemaAlRegistro(aux.info.toString());
+                aux = aux.liga;
+            }
         jPanelRegsitro.revalidate();
         jPanelRegsitro.repaint();
     }
@@ -890,7 +891,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         });
 
         jPanelDespacho.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " };
+            String[] strings = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -906,21 +907,18 @@ public class FrmPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
                         .addGroup(jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
-                                .addGroup(jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jLabelFilaDespacho))
-                                    .addComponent(jProgressSEventos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(56, 56, 56)
-                                .addComponent(jLabelEventosValor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
-                                .addGap(94, 94, 94)
-                                .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelContenedorDespachosLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(jLabelFilaDespacho))
+                            .addComponent(jProgressSEventos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(56, 56, 56)
+                        .addComponent(jLabelEventosValor, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelContenedorDespachosLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(158, 158, 158))
         );
         jPanelContenedorDespachosLayout.setVerticalGroup(
             jPanelContenedorDespachosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -936,9 +934,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(12, 12, 12)
+                .addComponent(jBAtender, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabelRegistro.setText("CONSOLA");
@@ -989,15 +986,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanelContendorConsolaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
-                        .addGroup(jPanelContendorConsolaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabelRegistro))
-                            .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
-                                .addGap(118, 118, 118)
-                                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 128, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addComponent(jLabelRegistro)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanelContendorConsolaLayout.createSequentialGroup()
+                .addGap(156, 156, 156)
+                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         jPanelContendorConsolaLayout.setVerticalGroup(
             jPanelContendorConsolaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1006,8 +1002,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabelRegistro)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(24, 24, 24)
-                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jBDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jLabelSubtitulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -1021,7 +1018,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelSubtitulo)
@@ -1037,9 +1033,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 976, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -1065,7 +1062,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                         .addComponent(jDesktopPaneBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelContenedorDespachos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
+                        .addGap(41, 41, 41)
                         .addComponent(jPanelContendorConsola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(9, Short.MAX_VALUE))
@@ -1077,8 +1074,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     // ----------BOTONES-----------
     private void jBFalloElectricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloElectricoActionPerformed
-
-       Evento e = gestion.generarFalloElectrico();
+        Evento e = gestion.generarFalloElectrico();
        panelPuntos.agregarPunto(e, ROJO_ALERTA);
         JOptionPane.showMessageDialog( this, "Nuevo evento generado:\n" + e.toString(),"Fallo Eléctrico",JOptionPane.WARNING_MESSAGE);
         aplicarImpacto(e, false);
@@ -1120,7 +1116,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloSeguridadActionPerformed
 
     private void jBAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAtenderActionPerformed
-
         Evento e = gestion.atender();
         if (e != null) {
             JOptionPane.showMessageDialog(this, "Atendido:\n" + e.toString(),"Atención",JOptionPane.INFORMATION_MESSAGE);

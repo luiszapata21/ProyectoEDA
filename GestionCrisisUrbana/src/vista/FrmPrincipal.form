@@ -90,7 +90,6 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabelSubtitulo" min="-2" max="-2" attributes="0"/>
@@ -109,11 +108,12 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jLabelFoto" min="-2" pref="976" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
-                          <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jPanelContenedorDespachos" max="32767" attributes="0"/>
+                          <Component id="jPanelContendorConsola" max="32767" attributes="0"/>
                       </Group>
                   </Group>
+                  <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -143,7 +143,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jPanelContenedorDespachos" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                       <Component id="jPanelContendorConsola" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabelFoto" min="-2" pref="801" max="-2" attributes="0"/>
@@ -574,29 +574,23 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jLabelFilaDespacho" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="jProgressSEventos" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
-                                  <Component id="jLabelEventosValor" min="-2" pref="39" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
-                                  <Component id="jBAtender" min="-2" pref="125" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane3" min="-2" pref="363" max="-2" attributes="0"/>
+                                  <Component id="jLabelFilaDespacho" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="jProgressSEventos" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                          <Component id="jLabelEventosValor" min="-2" pref="39" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPane3" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jBAtender" min="-2" pref="125" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -616,9 +610,8 @@
                   <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane3" pref="171" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="jBAtender" min="-2" pref="45" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -658,7 +651,7 @@
             <Component class="javax.swing.JList" name="jPanelDespacho">
               <Properties>
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                  <StringArray count="15">
+                  <StringArray count="70">
                     <StringItem index="0" value=" "/>
                     <StringItem index="1" value=" "/>
                     <StringItem index="2" value=" "/>
@@ -674,6 +667,61 @@
                     <StringItem index="12" value=" "/>
                     <StringItem index="13" value=" "/>
                     <StringItem index="14" value=" "/>
+                    <StringItem index="15" value=" "/>
+                    <StringItem index="16" value=" "/>
+                    <StringItem index="17" value=" "/>
+                    <StringItem index="18" value=" "/>
+                    <StringItem index="19" value=" "/>
+                    <StringItem index="20" value=" "/>
+                    <StringItem index="21" value=" "/>
+                    <StringItem index="22" value=" "/>
+                    <StringItem index="23" value=" "/>
+                    <StringItem index="24" value=" "/>
+                    <StringItem index="25" value=" "/>
+                    <StringItem index="26" value=" "/>
+                    <StringItem index="27" value=" "/>
+                    <StringItem index="28" value=" "/>
+                    <StringItem index="29" value=" "/>
+                    <StringItem index="30" value=" "/>
+                    <StringItem index="31" value=" "/>
+                    <StringItem index="32" value=" "/>
+                    <StringItem index="33" value=" "/>
+                    <StringItem index="34" value=" "/>
+                    <StringItem index="35" value=" "/>
+                    <StringItem index="36" value=" "/>
+                    <StringItem index="37" value=" "/>
+                    <StringItem index="38" value=" "/>
+                    <StringItem index="39" value=" "/>
+                    <StringItem index="40" value=" "/>
+                    <StringItem index="41" value=" "/>
+                    <StringItem index="42" value=" "/>
+                    <StringItem index="43" value=" "/>
+                    <StringItem index="44" value=" "/>
+                    <StringItem index="45" value=" "/>
+                    <StringItem index="46" value=" "/>
+                    <StringItem index="47" value=" "/>
+                    <StringItem index="48" value=" "/>
+                    <StringItem index="49" value=" "/>
+                    <StringItem index="50" value=" "/>
+                    <StringItem index="51" value=" "/>
+                    <StringItem index="52" value=" "/>
+                    <StringItem index="53" value=" "/>
+                    <StringItem index="54" value=" "/>
+                    <StringItem index="55" value=" "/>
+                    <StringItem index="56" value=" "/>
+                    <StringItem index="57" value=" "/>
+                    <StringItem index="58" value=" "/>
+                    <StringItem index="59" value=" "/>
+                    <StringItem index="60" value=" "/>
+                    <StringItem index="61" value=" "/>
+                    <StringItem index="62" value=" "/>
+                    <StringItem index="63" value=" "/>
+                    <StringItem index="64" value=" "/>
+                    <StringItem index="65" value=" "/>
+                    <StringItem index="66" value=" "/>
+                    <StringItem index="67" value=" "/>
+                    <StringItem index="68" value=" "/>
+                    <StringItem index="69" value=" "/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -694,20 +742,17 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabelRegistro" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
-                                  <Component id="jBDeshacer" min="-2" pref="125" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="0" pref="128" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabelRegistro" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+                  <Component id="jBDeshacer" min="-2" pref="125" max="-2" attributes="0"/>
+                  <EmptySpace pref="140" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -718,8 +763,9 @@
                   <Component id="jLabelRegistro" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel2" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jBDeshacer" min="-2" pref="45" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

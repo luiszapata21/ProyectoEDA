@@ -21,8 +21,8 @@ public class EmergenciaMedica {
     
      // ===== cascadas =====
     private static String[][] cascadasM = {
-          {"Retrasos en al atención", "CRÍTICO", "Mayor colapso hospitalario"},
-          {"Hospitales sin cama disponible", "CRÍTICO", "Muerte de pacientes"},
+          {"Atención retrasada", "CRÍTICO", "Mayor colapso hospitalario"},
+          {"Camas no disponibles", "CRÍTICO", "Muerte de pacientes"},
           {"Dificultad de traslado", "MEDIO", "Ambulancias en mal estado"},
           {"Propagación de la crisis", "MEDIO", "Mayor cantidad de enfermos"}
     };
