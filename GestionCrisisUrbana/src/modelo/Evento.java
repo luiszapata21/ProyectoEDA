@@ -11,18 +11,16 @@ import java.time.LocalTime;
  * @author ASUS
  */
 public class Evento {
-     private int id;
+    private int id;
     private String tipo;        // Eléctrico, Agua, Salud, etc
     private String nivel;          // 3 = crítico, 2 = medio, 1 = bajo
     private String descripcion;
-    private LocalTime hora;
 
     public Evento(int id, String tipo, String nivel, String descripcion) {
         this.id = id;
         this.tipo = tipo;
         this.nivel = nivel;
-        this.descripcion=descripcion;
-        this.hora = LocalTime.now();     
+        this.descripcion=descripcion;   
     }
     
     
@@ -36,10 +34,6 @@ public class Evento {
 
     public String getNivel() {
         return nivel;
-    }
-
-    public LocalTime getHora() {
-        return hora;
     }
 
     public String getDescripcion() {

@@ -233,7 +233,7 @@ public class GestionCrisis {
                         vista.refrescarDespacho();
                     });
                 }
-                 // 👇 MENSAJE SE MANTIENE
+                 
                 JOptionPane.showMessageDialog(null,"⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),"Cascada eléctrica",JOptionPane.WARNING_MESSAGE);
                 generadas++;
             }

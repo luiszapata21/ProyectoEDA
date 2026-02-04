@@ -156,7 +156,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         Font valor  = new Font("Segoe UI", Font.BOLD, 16);
         Font valorServicios = new Font("Segoe UI", Font.BOLD, 20);
         
-
         jLabelTitulo.setFont(titulo);
         jLabelFilaDespacho.setFont(new Font("Segoe UI", Font.BOLD, 25) { });
         jLabelRegistro.setFont(new Font("Segoe UI", Font.BOLD, 25) {});
@@ -324,7 +323,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         label.setText(valor + " %");
     }
     
-    //ACTUALIZA LAS BARRAS DE PORCENTAJE
     private void aplicarImpacto(Evento e, boolean subir) {
         int impacto = impactoPorNivel(e.getNivel());
         if (!subir) impacto = -impacto;

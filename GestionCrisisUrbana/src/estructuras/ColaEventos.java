@@ -23,6 +23,7 @@ public class ColaEventos {
     }
 
     public void insertar(Evento e) {
+        
         NodoEvento nuevo = new NodoEvento(e);
 
         if (frente == null) {
@@ -35,7 +36,9 @@ public class ColaEventos {
         tamanio++;
     }
 
+    
     public Evento eliminar() {
+        
         if (frente == null) return null;
 
         Evento e = frente.info;
@@ -46,13 +49,19 @@ public class ColaEventos {
             fin = null;
         }
         return e;
+
     }
 
+
+    
     public Evento verFrente() {
         if (frente == null) return null;
         return frente.info;
     }
 
+
+    
+    
     public boolean estaVacia() {
         return frente == null;
     }

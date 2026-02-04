@@ -26,7 +26,7 @@ public class FallosElectricos {
           {"Semáforos apagados", "CRÍTICO", "Caos vehicular"},
           {"Metro detenido", "MEDIO", "Transporte suspendido"},
           {"Agua interrumpida", "MEDIO", "Bombeo detenido"}
-      };
+    };
 
     // ===== FALL0 PRINCIPAL ALEATORIO =====
     public static Evento generarFallo(int id) {
@@ -39,7 +39,7 @@ public class FallosElectricos {
         );
     }
 
-    // ===== UNA CASCADA ALEATORIA =====
+    // ===== UNA CASCADA ALEATORIA -----
     public static Evento generarCascada(int id, String nivelFallo) {
         int i;
         while (true) {
