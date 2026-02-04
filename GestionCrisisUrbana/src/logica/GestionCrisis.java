@@ -72,80 +72,80 @@ public class GestionCrisis {
     
     
     
-    private void copiarCola(ColaEventos origen, ColaEventos destino) {
-        int n = origen.getTamanio();
-        for (int i = 0; i < n; i++) {
-            Evento e = origen.eliminar();
-            destino.insertar(e);
-            origen.insertar(e);
+    private void copiarCola(ColaEventos origen, ColaEventos destino) { // Método que copia los elementos de una cola origen a una cola destino
+        int n = origen.getTamanio(); // Se obtiene el número de elementos de la cola origen
+        for (int i = 0; i < n; i++) { // Se recorre la cola origen exactamente n veces
+            Evento e = origen.eliminar(); // Se elimina temporalmente el evento del frente de la cola origen
+            destino.insertar(e); // Se inserta el evento en la cola destino
+            origen.insertar(e); // Se vuelve a insertar el evento en la cola origen para conservar su contenido y orden original
         }
     }
 
     //------------METODOS DE BOTONES-----------------
     
     // ------------BOTÓN FALLO ELÉCTRICO ------------
-    public Evento generarFalloElectrico() {
-        Evento e = FallosElectricos.generarFallo(generarId());
-        falloActivo = e;
-        insertarEnDespacho(e);
-        if (vista != null) {
+    public Evento generarFalloElectrico() { // Genera un evento de fallo eléctrico y lo gestiona dentro del sistema
+        Evento e = FallosElectricos.generarFallo(generarId()); // Se genera un nuevo evento de fallo eléctrico con un ID único
+        falloActivo = e; // Se establece el evento como el fallo activo actual
+        insertarEnDespacho(e); // Se inserta el evento en la cola de despacho correspondiente
+        if (vista != null) { // Si la vista está disponible, se registra el fallo y se actualiza la interfaz
             vista.registrarFallo(e);
             vista.refrescarDespacho();
         }
-        iniciarCascadasAutomaticasElectrica();
-        return e;
+        iniciarCascadasAutomaticasElectrica(); // Se inician automáticamente los eventos en cascada
+        return e; // Se retorna el evento generado
     }
     
     // ------------BOTÓN FALLO SEGURIDAD ------------
-    public Evento generarFalloSeguridad(){
-        Evento p = BrechaSeguridad.generarFalloP(generarId());
-        falloActivo = p;
-        insertarEnDespacho(p);
-        if(vista != null){
+    public Evento generarFalloSeguridad(){ // Genera un evento de brecha de seguridad
+        Evento p = BrechaSeguridad.generarFalloP(generarId());  // Se genera el evento principal de seguridad
+        falloActivo = p; // Se asigna como el fallo activo
+        insertarEnDespacho(p); // Se inserta el evento en el despacho
+        if(vista != null){ // Se actualiza la interfaz gráfica
             vista.registrarFallo(p);
             vista.refrescarDespacho();
         }
-        iniciarCascadasAutomaticasSEGURIDAD();
-        return p;
+        iniciarCascadasAutomaticasSEGURIDAD(); // Se inician los eventos en cascada asociados a la brecha de seguridad
+        return p; // Se retorna el evento generado
     }
 
     // ------------ BOTÓN FALLO AGUA ------------
-    public Evento generarFalloAgua(){
-        Evento a = SuministroAgua.generarFallo(generarId());
-        falloActivo=a;
-        insertarEnDespacho(a);
-        if(vista != null){
+    public Evento generarFalloAgua(){ // Genera un evento relacionado con el suministro de agua
+        Evento a = SuministroAgua.generarFallo(generarId()); // Se crea el evento principal de fallo de agua
+        falloActivo=a; // Se establece como evento activo
+        insertarEnDespacho(a); // Se inserta el evento en la cola de despacho
+        if(vista != null){ // Se actualiza la interfaz gráfica
             vista.registrarFallo(a);
             vista.refrescarDespacho();
         }
-        iniciarCascadasAutomaticasAGUA(); 
-        return a;
+        iniciarCascadasAutomaticasAGUA(); // Se generan los eventos en cascada del fallo de agua
+        return a; // Se retorna el evento generado
     }
     
     // ------------ BOTÓN FALLO VIAL------------
-    public Evento generarFalloVial(){
-        Evento c = ColapsoVial.generarFalloC(generarId());
-        falloActivo=c;
-        insertarEnDespacho(c);
-        if(vista != null){
+    public Evento generarFalloVial(){ // Genera un evento de fallo vial
+        Evento c = ColapsoVial.generarFalloC(generarId()); // Se genera el evento principal de fallo vial
+        falloActivo=c; // Se asigna como el fallo activo
+        insertarEnDespacho(c); // Se inserta el evento en el despacho
+        if(vista != null){ // Se actualiza la interfaz gráfica
             vista.registrarFallo(c);
             vista.refrescarDespacho();
         }
-        iniciarCascadaAutomaticasVial();
-        return c;
+        iniciarCascadaAutomaticasVial(); // Se inician los eventos en cascada asociados al fallo vial
+        return c; // Se retorna el evento generado
     }
     
     // ------------ BOTÓN FALLO EMERGENCIA MEDICA ------------
-    public Evento generarFalloMedico(){
-        Evento m = EmergenciaMedica.generarFalloM(generarId());
-        falloActivo=m;
-        insertarEnDespacho(m);
-        if(vista != null){
+    public Evento generarFalloMedico(){ // Genera un evento de fallo medico
+        Evento m = EmergenciaMedica.generarFalloM(generarId()); // Se genera el evento principal de fallo medico
+        falloActivo=m; // Se asigna como el fallo activo
+        insertarEnDespacho(m); // Se inserta el evento en el despacho
+        if(vista != null){ // Se actualiza la interfaz gráfica
             vista.registrarFallo(m);
             vista.refrescarDespacho();
         }
-        iniciarCascadaAutomaticaMedica();
-        return m;
+        iniciarCascadaAutomaticaMedica(); // Se inician los eventos en cascada asociados al fallo medico
+        return m; // Se retorna el evento generado
     }
     
     
