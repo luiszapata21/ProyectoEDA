@@ -154,8 +154,8 @@ public class GestionCrisis {
     
     
     // ------------ ATENDER (CRÍTICO → MEDIO → BAJO) ------------
-    public Evento atender() {
-        Evento e = null;
+    public Evento atender() { // Método que atiende el siguiente evento disponible según su prioridad
+        Evento e = null; 
 
         // Primero los CRITICOS
         if (!despachoCriticos.estaVacia()) {
@@ -170,37 +170,37 @@ public class GestionCrisis {
             e = despachoBajos.eliminar();
         }
 
-        if (e != null) {
-            registro.apilar(e); // pila de atendidos
+        if (e != null) { // Si se logró atender un evento
+            registro.apilar(e);  // El evento atendido se almacena en la pila de registro para mantener un historial de atención
 
-            if (vista != null) {
+            if (vista != null) {  // Si la interfaz gráfica está disponible, se actualiza la vista
                 vista.registrarAtendido(e);
                 vista.refrescarDespacho();
                 vista.refrescarRegistro();
             }
         }
-        return e;
+        return e; // Se retorna el evento atendido
         
     }
 
     //------------ DESHACCER ULTIMO ------------
-    public Evento deshacerUltimo() {
-       Evento e = registro.desapilar(); // saca el último
-       if (e != null) {
+    public Evento deshacerUltimo() { // Permite revertir la última atención realizada
+       Evento e = registro.desapilar(); // Se extrae el último evento atendido desde la pila (LIFO)
+       if (e != null) { // Si existe un evento para deshacer
            insertarEnDespacho(e); // vuelve al despacho
-                if (vista != null) {
+                if (vista != null) { // Se actualiza la interfaz gráfica
                     vista.registrarDeshecho(e);
                     vista.refrescarDespacho();
                     vista.refrescarRegistro();
                 }
        }
-       return e;
+       return e;  // Se retorna el evento restaurado
    }
 
     
-    private void insertarEnDespacho(Evento e) {
-        String nivel = e.getNivel().toUpperCase();
-        switch (nivel) {
+    private void insertarEnDespacho(Evento e) { // Inserta el evento en la cola correspondiente dependiendo de su nivel
+        String nivel = e.getNivel().toUpperCase(); // Se obtiene el nivel del evento en mayúsculas para evitar errores
+        switch (nivel) { // Se inserta el evento en la cola según su prioridad
             case "CRÍTICO":
                 despachoCriticos.insertar(e);
                 break;
@@ -218,155 +218,155 @@ public class GestionCrisis {
     //------------ INICIAR CASCADA ------------
     
     //CASCADAS ELECTRICAS
-    public void iniciarCascadasAutomaticasElectrica() {
+    public void iniciarCascadasAutomaticasElectrica() { // Genera automáticamente eventos derivados de un fallo eléctrico
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            int generadas = 0;
+            int generadas = 0; // Contador de cascadas generadas
             @Override
             public void run() {
-                if (generadas == 3) {
+                if (generadas == 3) { // Se detiene el temporizador después de generar 3 cascadas
                     timer.cancel();
                     return;
                 }
-                Evento c = FallosElectricos.generarCascada(generarId(),falloActivo.getNivel());
-                insertarEnDespacho(c);
-                if (vista != null) {
+                Evento c = FallosElectricos.generarCascada(generarId(),falloActivo.getNivel()); // Se genera un evento en cascada según el nivel del fallo activo
+                insertarEnDespacho(c); // Se inserta la cascada en el despacho correspondiente
+                if (vista != null) { // Se actualiza la interfaz gráfica en el hilo de Swing
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
                         vista.refrescarDespacho();
                     });
                 }
-                 
+                 // Se muestra un mensaje alertando al usuario de la nueva cascada
                 JOptionPane.showMessageDialog(null,"⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),"Cascada eléctrica",JOptionPane.WARNING_MESSAGE);
-                generadas++;
+                generadas++; // Se incrementa el contador de cascadas generadas
             }
-        }, 7000, 6000);
+        }, 7000, 6000); // Primera cascada a los 7s, luego cada 6s
     }
     
     //CASCADAS DE SEGURIDAD
-    public void iniciarCascadasAutomaticasSEGURIDAD() {
+    public void iniciarCascadasAutomaticasSEGURIDAD() { // Genera automáticamente eventos derivados de una brecha de seguridad
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            int generadas = 0;
+            int generadas = 0; // Contador de cascadas generadas
 
             @Override
             public void run() {
-                if (generadas == 3) {
+                if (generadas == 3) { // Se detiene el temporizador después de generar 3 cascadas
                     timer.cancel();
                     return;
                 }
-                Evento c = BrechaSeguridad.generarCascadaP(generarId() , falloActivo.getNivel());
-                insertarEnDespacho(c);
-                if (vista != null) {
+                Evento c = BrechaSeguridad.generarCascadaP(generarId() , falloActivo.getNivel()); // Se genera un evento en cascada según el nivel del fallo activo
+                insertarEnDespacho(c); // Se inserta la cascada en el despacho correspondiente
+                if (vista != null) { // Se actualiza la interfaz gráfica en el hilo de Swing
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
                         vista.refrescarDespacho(); });
                 }
-
+                // Se muestra un mensaje alertando al usuario de la nueva cascada
                 JOptionPane.showMessageDialog(
                     null,
                     "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
                     "Cascada seguridad",
                     JOptionPane.WARNING_MESSAGE);
 
-                generadas++;
+                generadas++; // Se incrementa el contador de cascadas generadas
             }
-        },7000, 6000);
+        },7000, 6000); // Primera cascada a los 7s, luego cada 6s
     }
     
     //CASCADAS DE AGUA 
-    public void iniciarCascadasAutomaticasAGUA() {
+    public void iniciarCascadasAutomaticasAGUA() { // Genera automáticamente eventos derivados de un suministro de agua
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            int generadas = 0;
+            int generadas = 0; // Contador de cascadas generadas
 
             @Override
             public void run() {
-                if (generadas == 3) {
+                if (generadas == 3) { // Se detiene el temporizador después de generar 3 cascadas
                     timer.cancel();
                     return;
                 }
                 // Generar cascada de agua
-                Evento c = modelo.SuministroAgua.generarCascada(generarId(),  falloActivo.getNivel());
-                insertarEnDespacho(c);
-                if (vista != null) {
+                Evento c = modelo.SuministroAgua.generarCascada(generarId(),  falloActivo.getNivel()); // Se genera un evento en cascada según el nivel del fallo activo
+                insertarEnDespacho(c); // Se inserta la cascada en el despacho correspondiente
+                if (vista != null) { // Se actualiza la interfaz gráfica en el hilo de Swing
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
                         vista.refrescarDespacho(); 
                     });
                 }
-
+                // Se muestra un mensaje alertando al usuario de la nueva cascada
                 JOptionPane.showMessageDialog(
                     null,
                     "⚠ NUEVA CASCADA DE AGUA:\n" + c.toString(),
                     "Crisis Hídrica",
                     JOptionPane.WARNING_MESSAGE);
 
-                generadas++;
+                generadas++; // Se incrementa el contador de cascadas generadas
             }
-        }, 7000, 6000); // Mismos tiempos que los otros
+        }, 7000, 6000); // Primera cascada a los 7s, luego cada 6s
     }
 
     //CASCADAS VIAL
-    private void iniciarCascadaAutomaticasVial() {
+    private void iniciarCascadaAutomaticasVial() { // Genera automáticamente eventos derivados de un colapso vial
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            int generadas = 0;
+            int generadas = 0; // Contador de cascadas generadas
 
             @Override
             public void run() {
-                if (generadas == 3) {
+                if (generadas == 3) { // Se detiene el temporizador después de generar 3 cascadas
                     timer.cancel();
                     return;
                 }
-                Evento c = ColapsoVial.generarCascadaP(generarId(), falloActivo.getNivel());
-                insertarEnDespacho(c);
-                if (vista != null) {
+                Evento c = ColapsoVial.generarCascadaP(generarId(), falloActivo.getNivel()); // Se genera un evento en cascada según el nivel del fallo activo
+                insertarEnDespacho(c); // Se inserta la cascada en el despacho correspondiente
+                if (vista != null) { // Se actualiza la interfaz gráfica en el hilo de Swing
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
                         vista.refrescarDespacho(); });
                 }
-
+                // Se muestra un mensaje alertando al usuario de la nueva cascada
                 JOptionPane.showMessageDialog(
                     null,
                     "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
                     "Cascada Vial",
                     JOptionPane.WARNING_MESSAGE);
 
-                generadas++;
+                generadas++; // Se incrementa el contador de cascadas generadas
             }
-        },7000, 6000);
+        },7000, 6000); // Primera cascada a los 7s, luego cada 6s
     }
     
     //Cascada de Emergencia Médica
-    private void iniciarCascadaAutomaticaMedica(){
+    private void iniciarCascadaAutomaticaMedica(){ // Genera automáticamente eventos derivados de una emergencia medica
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            int generadas = 0;
+            int generadas = 0; // Contador de cascadas generadas
 
             @Override
             public void run() {
-                if (generadas == 3) {
+                if (generadas == 3) { // Se detiene el temporizador después de generar 3 cascadas
                     timer.cancel();
                     return;
                 }
-                Evento c = EmergenciaMedica.generarCascadaM(generarId(), falloActivo.getNivel());
-                insertarEnDespacho(c);
-                if (vista != null) {
+                Evento c = EmergenciaMedica.generarCascadaM(generarId(), falloActivo.getNivel()); // Se genera un evento en cascada según el nivel del fallo activo
+                insertarEnDespacho(c); // Se inserta la cascada en el despacho correspondiente
+                if (vista != null) { // Se actualiza la interfaz gráfica en el hilo de Swing
                     javax.swing.SwingUtilities.invokeLater(() -> {
                         vista.registrarCascada(c);
                         vista.refrescarDespacho(); });
                 }
-
+                // Se muestra un mensaje alertando al usuario de la nueva cascada
                 JOptionPane.showMessageDialog(
                     null,
                     "⚠ NUEVA CASCADA GENERADA:\n" + c.toString(),
                     "Emergencia Médica",
                     JOptionPane.WARNING_MESSAGE);
 
-                generadas++;
+                generadas++; // Se incrementa el contador de cascadas generadas
             }
-        },7000, 6000);
+        },7000, 6000); // Primera cascada a los 7s, luego cada 6s
     }
     
     /*
