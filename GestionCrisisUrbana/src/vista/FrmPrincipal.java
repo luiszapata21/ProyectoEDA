@@ -30,33 +30,34 @@ import modelo.Evento;
  */
 public class FrmPrincipal extends javax.swing.JFrame {
     // PUNTOS
-    private PanelPuntos panelPuntos;
+    private PanelPuntos panelPuntos; // Panel donde se dibujan los puntos de eventos en el mapa
     
     //ATRIBUTO GLOBAL
-    private GestionCrisis gestion;
+    private GestionCrisis gestion; // Objeto principal que gestiona toda la lógica del sistema
     
     //HISTORIAL
-    private JLabel[] pilaHistorial;
-    private int topeHistorial;
-    private final int MAX_HISTORIAL = 100;
+    private JLabel[] pilaHistorial; // Arreglo de etiquetas para mostrar el historial de eventos
+    private int topeHistorial; // Índice que representa el tope del historial (simula una pila)
+    private final int MAX_HISTORIAL = 100; // Tamaño máximo permitido del historial
 
     
     //BARRAS
-    private int eventosActivos = 0;
-    private final int MAX_EVENTOS = 100;
+    private int eventosActivos = 0; // Contador de eventos activos en el sistema 
+    private final int MAX_EVENTOS = 100; // Máximo permitido de eventos
     
 
        // ----------- COLORES -----------
+    // Colores usados para identificar cada tipo de servicio
     private final Color BG_PRINCIPAL = new Color(10, 15, 30);
     private final Color BG_PANEL     = new Color(20, 30, 55);
-    private final Color ROJO_ALERTA  = new Color(220, 60, 60);
-    private final Color VERDE_OK     = new Color(40, 200, 120);
-    private final Color AMARILLO     = new Color(255, 180, 60);
-    private final Color AZUL         = new Color(80, 160, 255);
-    private final Color MORADO       = new Color(170, 90, 255);
+    private final Color ROJO_ALERTA  = new Color(220, 60, 60); //Energia
+    private final Color VERDE_OK     = new Color(40, 200, 120); //Salud
+    private final Color AMARILLO     = new Color(255, 180, 60); //Vial 
+    private final Color AZUL         = new Color(80, 160, 255); //Agua
+    private final Color MORADO       = new Color(170, 90, 255); //Seguridad
 
     // ----------- PANEL -----------
-    private void estilizarPanel(JDesktopPane p) {
+    private void estilizarPanel(JDesktopPane p) { // Aplica estilo visual a los paneles
         p.setBackground(BG_PANEL);
         p.setBorder(
             javax.swing.BorderFactory.createLineBorder(
@@ -67,7 +68,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
 
     // ----------- BARRA -----------
-    private void estilizarBarra(JProgressBar bar, Color color) {
+    private void estilizarBarra(JProgressBar bar, Color color) { // Aplica estilo visual a las barras de progreso
         bar.setForeground(color);
         bar.setBackground(new Color(30, 40, 70));
         bar.setBorder(null);
@@ -77,7 +78,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
 
     // ----------- BOTÓN -----------
-    private void estilizarBoton(JButton btn, Color fondo) {
+    private void estilizarBoton(JButton btn, Color fondo) { // Aplica estilo visual a los botones
         btn.setBackground(fondo.darker());
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
@@ -96,6 +97,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         gestion = new GestionCrisis(); 
             
         //PUNTOS
+        // Inicializa el panel de puntos sobre el mapa
         panelPuntos = new PanelPuntos();
         jLabelFoto.add(panelPuntos);
         panelPuntos.setBounds(0, 0, jLabelFoto.getWidth(), jLabelFoto.getHeight());   
@@ -105,6 +107,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPanelRegsitro.setLayout(new javax.swing.BoxLayout(jPanelRegsitro, javax.swing.BoxLayout.Y_AXIS));
        
         // Cargar la clase gestion
+        // Inicializa la lógica del sistema
         gestion= new GestionCrisis();
         gestion.setVista(this);
         
@@ -184,7 +187,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
     
     //------PUNTOS---------
-    public class PanelPuntos extends JPanel {
+    public class PanelPuntos extends JPanel { // Panel personalizado que dibuja los eventos como puntos animados
         private ArrayList<Punto> puntos = new ArrayList<>();
         private boolean fondoGris = false;
 
@@ -195,7 +198,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             timer.start();
         }
         
-       public void agregarPunto(Evento e, Color color) {
+       public void agregarPunto(Evento e, Color color) { // Agrega un punto asociado a un evento en una posición aleatoria
             int x = (int) (Math.random() * getWidth());
             int y = (int) (Math.random() * getHeight());
             puntos.add(new Punto(e, x, y, color));
@@ -203,7 +206,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             repaint();
         }
         
-        public void quitarPunto(Evento e) {
+        public void quitarPunto(Evento e) { // Quita el punto cuando el evento es atendido
             puntos.removeIf(p -> p.evento.equals(e));
             if (puntos.isEmpty()) fondoGris = false;
             repaint();
@@ -239,7 +242,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
     }
        
-    public class Punto {
+    public class Punto { // Representa un evento dibujado como un punto animado
         Evento evento;
         int x, y;
         Color color;
@@ -253,7 +256,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             this.color = color;
         }
 
-        public void dibujar(Graphics2D g) {
+        public void dibujar(Graphics2D g) { // Dibuja el punto con efecto de "palpitación"
             if (crecer) radio++;
             else radio--;
             if (radio >= 25) crecer = false;
@@ -263,32 +266,32 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
     }   
     
-    private Color colorPorTipo(Evento e) {
+    private Color colorPorTipo(Evento e) { // Determina el color del evento según su tipo
         String tipo = e.getTipo().toLowerCase();
 
          // ELÉCTRICO
-         if (tipo.contains("apagón") ||  tipo.contains("corte") || tipo.contains("sobrecarga") ){
+         if (tipo.contains("apagón") ||  tipo.contains("corte") || tipo.contains("sobrecarga") ){ //Encuentra uno de las opcione sy genera el punto
              return ROJO_ALERTA;
          }
          //  AGUA
-         if (tipo.contains("agua") ||tipo.contains("presion") || tipo.contains("contaminacion")){
+         if (tipo.contains("agua") ||tipo.contains("presion") || tipo.contains("contaminacion")){ //Encuentra uno de las opcione sy genera el punto
              return AZUL;
          }
          //  VIAL
          if ( tipo.contains("metro") ||tipo.contains("semáforos") ||tipo.contains("congestión") ||
-             tipo.contains("colapso") || tipo.contains("sistema") || tipo.contains("limpieza")){
+             tipo.contains("colapso") || tipo.contains("sistema") || tipo.contains("limpieza")){ //Encuentra uno de las opcione sy genera el punto
              return AMARILLO;
          }
          //  SALUD (solo visual)
          if (tipo.contains("hospitales") || tipo.contains("salud") ||tipo.contains("accidentes")|| tipo.contains("saturación") 
                 || tipo.contains("falta") || tipo.contains("retrasos") || tipo.contains("atención") 
-                || tipo.contains("camas") || tipo.contains("dificultad") || tipo.contains("propagación")){
+                || tipo.contains("camas") || tipo.contains("dificultad") || tipo.contains("propagación")){ //Encuentra uno de las opcione sy genera el punto
              return VERDE_OK;
          }
 
          //  SEGURIDAD
          if (tipo.contains("disturbios") || tipo.contains("robo") ||tipo.contains("incidente") ||
-             tipo.contains("negocios") || tipo.contains("malestar") || tipo.contains("centros") || tipo.contains("miedo")){
+             tipo.contains("negocios") || tipo.contains("malestar") || tipo.contains("centros") || tipo.contains("miedo")){ //Encuentra uno de las opcione sy genera el punto
              return MORADO;
          }
 
@@ -298,7 +301,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     
     // --------- BARRAS DE PORCENTAJE -----
-    private void actualizarEventos(int delta) {
+    private void actualizarEventos(int delta) { // Actualiza el contador de eventos activos
         eventosActivos += delta;
         if (eventosActivos < 0) eventosActivos = 0;
         if (eventosActivos > MAX_EVENTOS) eventosActivos = MAX_EVENTOS;
@@ -306,7 +309,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabelEventosValor.setText(String.valueOf(eventosActivos));
     }
     
-    private int impactoPorNivel(String nivel) {
+    private int impactoPorNivel(String nivel) { // Define cuánto impacto genera un evento según su nivel
         switch (nivel) {
             case "CRÍTICO": return 20;
             case "MEDIO":   return 10;
@@ -323,34 +326,34 @@ public class FrmPrincipal extends javax.swing.JFrame {
         label.setText(valor + " %");
     }
     
-    private void aplicarImpacto(Evento e, boolean subir) {
+    private void aplicarImpacto(Evento e, boolean subir) { // Aplica el impacto del evento sobre la barra correspondiente
         int impacto = impactoPorNivel(e.getNivel());
         if (!subir) impacto = -impacto;
         String tipo = e.getTipo().toUpperCase();
 
         //  ELÉCTRICO (solo fallos eléctricos directos)
         if (tipo.contains("APAGÓN") ||tipo.contains("CORTE") || tipo.contains("SOBRECARGA")){
-            modificarBarra(jProgressEnergia, jLabelEnergiaValor, impacto);
+            modificarBarra(jProgressEnergia, jLabelEnergiaValor, impacto); //Actualiza el impacto en la barra correspondiente
         }
         //  AGUA
         else if (tipo.contains("AGUA") || tipo.contains("PRESION") || tipo.contains("CONTAMINACION")){
-            modificarBarra(jProgressAgua, jLabelAguaValor, impacto);
+            modificarBarra(jProgressAgua, jLabelAguaValor, impacto); //Actualiza el impacto en la barra correspondiente
         }
         //  VIAL
         else if ( tipo.contains("METRO") || tipo.contains("SEMÁFOROS") || tipo.contains("CONGESTIÓN") ||
             tipo.contains("COLAPSO") ||tipo.contains("SISTEMA") ||tipo.contains("LIMPIEZA") ){
-            modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto);
+            modificarBarra(jProgressTransporte, jLabelTransporteValor, impacto); //Actualiza el impacto en la barra correspondiente
         }
         // SALUD (solo impacto, NO clase propia)
         else if (tipo.contains("HOSPITALES") ||tipo.contains("SALUD") || tipo.contains("ACCIDENTES") || tipo.contains("SATURACIÓN") 
                 || tipo.contains("FALTA") || tipo.contains("RETRASOS") || tipo.contains("ATENCIÓN") 
                 || tipo.contains("CAMAS") || tipo.contains("DIFICULTAD") || tipo.contains("PROPAGACIÓN")){
-            modificarBarra(jProgressSalud, jLabelSaludValor, impacto);
+            modificarBarra(jProgressSalud, jLabelSaludValor, impacto); //Actualiza el impacto en la barra correspondiente
         }
         //  SEGURIDAD
         else if (tipo.contains("DISTURBIOS") || tipo.contains("ROBO") || tipo.contains("INCIDENTE") ||
             tipo.contains("NEGOCIOS") ||tipo.contains("MALESTAR") || tipo.contains("CENTROS") ||tipo.contains("MIEDO")){
-            modificarBarra(jProgressSeguridad1, jLabelSeguridadValor, impacto);
+            modificarBarra(jProgressSeguridad1, jLabelSeguridadValor, impacto); //Actualiza el impacto en la barra correspondiente
         }
     }
     
@@ -358,7 +361,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     //-------DESPACHO Y RGISTRO
     
-    private JPanel crearProblema(String texto) {
+    private JPanel crearProblema(String texto) { // Crea un panel visual para mostrar un evento
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         panel.setBackground(new Color(240, 240, 240));
@@ -384,7 +387,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPanelRegsitro.repaint();
     }
     
-    public void refrescarDespacho() {
+    public void refrescarDespacho() { // Refresca visualmente la cola de despacho (FIFO)
          jPanelDespacho.removeAll();
 
         NodoEvento aux = gestion.getDespachoOrdenado().getFrente();
@@ -398,7 +401,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         
     }
     
-    public void refrescarRegistro() {
+    public void refrescarRegistro() { // Refresca visualmente el registro (PILA)
         jPanelRegsitro.removeAll();
         NodoEvento aux = gestion.getRegistro().getCima(); // pila (último arriba)
             while (aux != null) {
@@ -413,7 +416,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     // ------ HISTORISAL ------
     
-    public void agregarAlHistorial(String texto) {
+    public void agregarAlHistorial(String texto) { // Agrega un evento al historial visual
         if (topeHistorial == MAX_HISTORIAL - 1) return; // lleno
          JLabel lbl = new JLabel(texto);
          lbl.setForeground(Color.RED);
@@ -446,7 +449,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPanelHistorial.repaint();
     }
     
-    private String horaActual() {
+    private String horaActual() { // Devuelve la hora actual del sistema
         return java.time.LocalTime.now()
                 .withNano(0).toString();
     }
@@ -454,12 +457,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     //--------- METODOS DE REGISTROS
     
-    public void registrarFallo(Evento e) {
+    public void registrarFallo(Evento e) { // Registra un nuevo fallo
         agregarAlHistorial("[" + horaActual() + "] ❌ FALLO: " + e.getNivel() + " | " + e.getTipo()); 
         actualizarEventos(+1);
     }
 
-    public void registrarCascada(Evento e) {
+    public void registrarCascada(Evento e) { // Registra una cascada generada
         agregarAlHistorial("[" + horaActual() + "] ⚠ CASCADA: " + e.getNivel() + " | " + e.getTipo());
         Color color = colorPorTipo(e);
         panelPuntos.agregarPunto(e, colorPorTipo(e));
@@ -467,13 +470,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         aplicarImpacto(e, false); 
     }
 
-    public void registrarAtendido(Evento e) {
+    public void registrarAtendido(Evento e) { 
+// Registra un evento atendido
         agregarAlHistorial("[" + horaActual() + "] ✅ ATENDIDO: " + e.getNivel() + " | " + e.getTipo());
         actualizarEventos(-1);
         panelPuntos.quitarPunto(e);
     }
 
-    public void registrarDeshecho(Evento e) {
+    public void registrarDeshecho(Evento e) { // Registra un deshacer dentro de la interfaz
         agregarAlHistorial( "[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo());
         actualizarEventos(+1);
         panelPuntos.restaurarPunto(e);
@@ -1072,42 +1076,44 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     // ----------BOTONES-----------
     private void jBFalloElectricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloElectricoActionPerformed
-        Evento e = gestion.generarFalloElectrico();
-       panelPuntos.agregarPunto(e, ROJO_ALERTA);
+        Evento e = gestion.generarFalloElectrico(); // Genera un nuevo evento de brecha a través del llamado de su clase
+       panelPuntos.agregarPunto(e, ROJO_ALERTA); // Agrega un punto visual en el mapa para representar el evento generado
         JOptionPane.showMessageDialog( this, "Nuevo evento generado:\n" + e.toString(),"Fallo Eléctrico",JOptionPane.WARNING_MESSAGE);
-        aplicarImpacto(e, false);
-        refrescarDespacho();
+        // Muestra un mensaje emergente informando al usuario que se ha generado un nuevo evento
+        aplicarImpacto(e, false); // El parámetro 'false' indica que se trata de un evento principal
+        refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO
     }//GEN-LAST:event_jBFalloElectricoActionPerformed
 
     private void jBFalloAguaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloAguaActionPerformed
-        Evento a = gestion.generarFalloAgua();
-        panelPuntos.agregarPunto(a, AZUL);
-       
-        // 3. Mostrar mensaje al usuario
+        Evento a = gestion.generarFalloAgua(); // Genera un nuevo evento de brecha a través del llamado de su clase
+        panelPuntos.agregarPunto(a, AZUL); // Agrega un punto visual en el mapa para representar el evento generado
         JOptionPane.showMessageDialog(this, "Nuevo evento generado:\n" + a.toString(), "Fallo de Suministro de Agua",JOptionPane.WARNING_MESSAGE );
-        aplicarImpacto(a, false);
-        refrescarDespacho();
+        // Muestra un mensaje emergente informando al usuario que se ha generado un nuevo evento
+        aplicarImpacto(a, false); // El parámetro 'false' indica que se trata de un evento principal
+        refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO
     }//GEN-LAST:event_jBFalloAguaActionPerformed
 
     private void jBFalloVialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloVialActionPerformed
-        Evento c = gestion.generarFalloVial();
-          panelPuntos.agregarPunto(c, AMARILLO);
+        Evento c = gestion.generarFalloVial(); // Genera un nuevo evento de brecha a través del llamado de su clase
+          panelPuntos.agregarPunto(c, AMARILLO); // Agrega un punto visual en el mapa para representar el evento generado
           JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + c.toString(),"Fallo en Colapso Vial",JOptionPane.WARNING_MESSAGE);
-          aplicarImpacto(c, false);
-          refrescarDespacho();
+          // Muestra un mensaje emergente informando al usuario que se ha generado un nuevo evento
+          aplicarImpacto(c, false); // El parámetro 'false' indica que se trata de un evento principal
+          refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO
     }//GEN-LAST:event_jBFalloVialActionPerformed
 
     private void jBFalloSaludActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSaludActionPerformed
-        Evento c = gestion.generarFalloMedico();
-          panelPuntos.agregarPunto(c, VERDE_OK);
+        Evento c = gestion.generarFalloMedico(); // Genera un nuevo evento de brecha a través del llamado de su clase
+          panelPuntos.agregarPunto(c, VERDE_OK); // Agrega un punto visual en el mapa para representar el evento generado
           JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + c.toString(),"Fallo en Emergencia Médica",JOptionPane.WARNING_MESSAGE);
-          aplicarImpacto(c, false);
-          refrescarDespacho();
+          // Muestra un mensaje emergente informando al usuario que se ha generado un nuevo evento
+          aplicarImpacto(c, false); // El parámetro 'false' indica que se trata de un evento principal
+          refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO
     }//GEN-LAST:event_jBFalloSaludActionPerformed
 
     private void jBFalloSeguridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFalloSeguridadActionPerformed
           Evento b = gestion.generarFalloSeguridad(); // Genera un nuevo evento de brecha o fallo de seguridad a través del llamado de su clase
-          panelPuntos.agregarPunto(b, MORADO);// Agrega un punto visual en el mapa para representar el evento generado
+          panelPuntos.agregarPunto(b, MORADO); // Agrega un punto visual en el mapa para representar el evento generado
           JOptionPane.showMessageDialog(this,"Nuevo evento generado:\n" + b.toString(),"Fallo de Seguridad",JOptionPane.WARNING_MESSAGE); 
           // Muestra un mensaje emergente informando al usuario que se ha generado un nuevo evento de fallo de seguridad
           aplicarImpacto(b, false);  // El parámetro 'false' indica que se trata de un evento principal
@@ -1115,21 +1121,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBFalloSeguridadActionPerformed
 
     private void jBAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAtenderActionPerformed
-        Evento e = gestion.atender();
+        Evento e = gestion.atender(); // Genera un nuevo evento de brecha a través del llamado de su clase
         if (e != null) {
             JOptionPane.showMessageDialog(this, "Atendido:\n" + e.toString(),"Atención",JOptionPane.INFORMATION_MESSAGE);
+            // Muestra un mensaje emergente informando al usuario
         }
-        refrescarDespacho();
-        refrescarRegistro();
-        aplicarImpacto(e, true);
+        refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO 
+        refrescarRegistro(); // Actualiza el registro de eventos para reflejar el nuevo estado del la pila
+        aplicarImpacto(e, true); // El parámetro 'false' indica que se trata de un evento principal
     }//GEN-LAST:event_jBAtenderActionPerformed
 
     private void jBDeshacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBDeshacerActionPerformed
-        Evento e = gestion.deshacerUltimo();
+        Evento e = gestion.deshacerUltimo(); // Genera un nuevo evento de brecha a través del llamado de su clase
         if (e != null) {
-            refrescarDespacho();
-            refrescarRegistro();
-            aplicarImpacto(e, false);
+            refrescarDespacho(); // Actualiza el despacho de eventos para reflejar el nuevo estado del la cola FIFO 
+            refrescarRegistro(); // Actualiza el registro de eventos para reflejar el nuevo estado del la pila
+            aplicarImpacto(e, false); // El parámetro 'false' indica que se trata de un evento principal
         }
     }//GEN-LAST:event_jBDeshacerActionPerformed
 
