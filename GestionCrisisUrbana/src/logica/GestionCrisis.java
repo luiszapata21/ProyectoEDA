@@ -25,46 +25,49 @@ public class GestionCrisis {
     private ColaEventos despacho;          // cola de problemas
     private ColaEventos cascadasPendientes;// cola de cascadas
     private PilaEventos registro;       // pila de atendidos
-    private Evento falloActivo;
-    private int id;
-    private FrmPrincipal vista;
-    private ColaEventos despachoCriticos = new ColaEventos();
+    private Evento falloActivo; // Evento que se encuentra actualmente activo o en atención
+    private int id; // Identificador único para cada evento generado
+    private FrmPrincipal vista; // Referencia a la ventana principal del sistema (interfaz gráfica)
+     // Colas auxiliares para organizar los eventos según su nivel de gravedad
+    private ColaEventos despachoCriticos = new ColaEventos(); 
     private ColaEventos despachoMedios   = new ColaEventos();
     private ColaEventos despachoBajos    = new ColaEventos();
 
 
-    public GestionCrisis() {
-        despacho = new ColaEventos();
+    public GestionCrisis() { // Inicializa las estructuras de datos y el contador de identificadores
+        despacho = new ColaEventos(); 
         cascadasPendientes = new ColaEventos();
         registro = new PilaEventos();
         id = 1;
     }
 
     //GETTERS Y SETTERES---------------------
-    public int generarId() {
+    public int generarId() { // Método que genera y retorna un identificador único para cada evento
         return id++;
     }
 
-    public PilaEventos getRegistro() {
+    public PilaEventos getRegistro() { // Retorna la pila que contiene el registro de eventos atendidos
         return registro;
     }
 
-    public ColaEventos getDespacho() {
+    public ColaEventos getDespacho() { // Retorna la cola principal de despacho de eventos
         return despacho;
     }
 
-    public void setVista(FrmPrincipal vista) {
+    public void setVista(FrmPrincipal vista) { // Asigna la referencia de la vista principal al gestor de crisis
         this.vista = vista;
     }
     
+    // Método que retorna una cola con los eventos ordenados por prioridad
+    // Primero críticos, luego medios y finalmente bajos
     public ColaEventos getDespachoOrdenado() {
-        ColaEventos total = new ColaEventos();
+        ColaEventos total = new ColaEventos(); 
 
-        copiarCola(despachoCriticos, total);
-        copiarCola(despachoMedios, total);
-        copiarCola(despachoBajos, total);
+        copiarCola(despachoCriticos, total); // Se copian los eventos críticos a la cola total
+        copiarCola(despachoMedios, total); // Se copian los eventos de prioridad media
+        copiarCola(despachoBajos, total); // Se copian los eventos de prioridad baja
 
-        return total;
+        return total; // Se retorna la cola ordenada por nivel de gravedad
     }
     
     
