@@ -59,11 +59,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     // ----------- PANEL -----------
     private void estilizarPanel(JDesktopPane p) { // Aplica estilo visual a los paneles
         p.setBackground(BG_PANEL);
-        p.setBorder(
-            javax.swing.BorderFactory.createLineBorder(
-                new Color(80, 120, 200, 80), 1
-            )
-        );
+        p.setBorder( javax.swing.BorderFactory.createLineBorder(new Color(80, 120, 200, 80), 1));
         p.setOpaque(true);
     }
 
@@ -82,11 +78,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         btn.setBackground(fondo.darker());
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
-        btn.setBorder(
-            javax.swing.BorderFactory.createLineBorder(
-                fondo.brighter(), 1
-            )
-        );
+        btn.setBorder( javax.swing.BorderFactory.createLineBorder(fondo.brighter(), 1) );
         btn.setOpaque(true);
     }
 
@@ -187,84 +179,81 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
     
     //------PUNTOS---------
-    public class PanelPuntos extends JPanel { // Panel personalizado que dibuja los eventos como puntos animados
-        private ArrayList<Punto> puntos = new ArrayList<>();
-        private boolean fondoGris = false;
-
+    public class PanelPuntos extends JPanel { 
+        private ArrayList<Punto> puntos = new ArrayList<>(); 
+        private boolean fondoGris = false;  // Variable que indica si se debe mostrar un fondo gris cuando hay eventos activos
         public PanelPuntos() {
-            setOpaque(false);
-            // Timer para animación (palpitado)
-            Timer timer = new Timer(80, e -> repaint());
-            timer.start();
-        }
-        
-       public void agregarPunto(Evento e, Color color) { // Agrega un punto asociado a un evento en una posición aleatoria
-            int x = (int) (Math.random() * getWidth());
-            int y = (int) (Math.random() * getHeight());
-            puntos.add(new Punto(e, x, y, color));
-            fondoGris = true;
-            repaint();
-        }
-        
-        public void quitarPunto(Evento e) { // Quita el punto cuando el evento es atendido
-            puntos.removeIf(p -> p.evento.equals(e));
-            if (puntos.isEmpty()) fondoGris = false;
-            repaint();
+            setOpaque(false);  // Hace que el panel sea transparente para poder dibujar efectos visuales encima
+            // Timer para palpitación 
+            Timer timer = new Timer(80, e -> repaint()); // Cada 80 milisegundos se repinta el panel para actualizar la animación
+            timer.start();  // Inicia el temporizador
         }
 
-        public void restaurarPunto(Evento e) {
-            // evitar duplicados
+        public void agregarPunto(Evento e, Color color) { 
+            int x = (int) (Math.random() * getWidth());  // Genera una posición X aleatoria dentro del ancho del panel
+            int y = (int) (Math.random() * getHeight());  // Genera una posición Y aleatoria dentro de la altura del panel
+            puntos.add(new Punto(e, x, y, color));  // Crea un nuevo punto y lo agrega a la lista
+            fondoGris = true;  // Activa el fondo gris porque ahora hay al menos un evento
+            repaint();  // Redibuja el panel para mostrar el nuevo punto
+        }
+
+        public void quitarPunto(Evento e) {  
+            puntos.removeIf(p -> p.evento.equals(e));  // Busca en la lista y elimina el punto cuyo evento sea igual al recibido
+            if (puntos.isEmpty()) fondoGris = false;   // Si ya no hay puntos, se desactiva el fondo gris
+            repaint();  // Redibuja el panel para reflejar los cambios
+        }
+
+        public void restaurarPunto(Evento e) { 
+            // Evita que se agreguen puntos duplicados
             for (Punto p : puntos) {
                 if (p.evento.equals(e)) {
-                    return;
+                    return;  // Si el evento ya existe como punto, no se agrega nuevamente
                 }
             }
-            Color color = colorPorTipo(e);
-            agregarPunto(e, color);
+            Color color = colorPorTipo(e);  // Obtiene el color correspondiente al tipo de evento
+            agregarPunto(e, color);  // Agrega nuevamente el punto al panel
         }
-        
 
         @Override
         protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g;
+            super.paintComponent(g);  // Llama al método original para limpiar el panel antes de dibujar
+            Graphics2D g2 = (Graphics2D) g;  // Convierte Graphics a Graphics2D para usar funciones avanzadas de dibujo
 
-            // Fondo gris semitransparente
+            // Fondo gris semitransparente cuando hay eventos activos
             if (fondoGris) {
-                g2.setColor(new Color(0, 0, 0, 150));
-                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setColor(new Color(0, 0, 0, 150));  // Color negro con transparencia
+                g2.fillRect(0, 0, getWidth(), getHeight());  // Dibuja un rectángulo que cubre todo el panel
             }
 
-            // Dibujar puntos
+            // Dibuja todos los puntos almacenados en la lista
             for (Punto p : puntos) {
-                p.dibujar(g2);
+                p.dibujar(g2);  // Llama al método dibujar de cada punto
             }
         }
     }
-       
-    public class Punto { // Representa un evento dibujado como un punto animado
-        Evento evento;
-        int x, y;
-        Color color;
-        int radio = 13;
-        boolean crecer = true;
 
+    public class Punto {  
+        Evento evento;  // Evento asociado al punto
+        int x, y;  // Coordenadas donde se dibuja el punto
+        Color color;  // Color del punto según el tipo de evento
+        int radio = 13;  // Tamaño inicial del punto
+        boolean crecer = true;  // Controla si el punto está creciendo o disminuyendo de tamaño
+        
         public Punto(Evento evento, int x, int y, Color color) {
-            this.evento = evento;
-            this.x = x;
-            this.y = y;
-            this.color = color;
+            this.evento = evento;  
+            this.x = x;  
+            this.y = y;  
+            this.color = color;  
         }
 
-        public void dibujar(Graphics2D g) { // Dibuja el punto con efecto de "palpitación"
-            if (crecer) radio++;
-            else radio--;
-            if (radio >= 25) crecer = false;
-            if (radio <= 20) crecer = true;
-            g.setColor(color);
-            g.fillOval(x - radio / 2, y - radio / 2, radio, radio);
+        public void dibujar(Graphics2D g) {  
+            if (crecer) radio++;  // Si está en modo crecer, aumenta el radio
+            else radio--;  // Si no, disminuye el radio
+            if (radio >= 25) crecer = false;   // Si alcanza el tamaño máximo, cambia a modo disminuir
+            if (radio <= 20) crecer = true;  // Si alcanza el tamaño mínimo, cambia a modo crecer            g.setColor(color);   // Establece el color del punto
+            g.fillOval(x - radio / 2, y - radio / 2, radio, radio);   // Dibuja el círculo centrado en (x, y)
         }
-    }   
+    }
     
     private Color colorPorTipo(Evento e) { // Determina el color del evento según su tipo
         String tipo = e.getTipo().toLowerCase();
@@ -301,15 +290,18 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     
     // --------- BARRAS DE PORCENTAJE -----
-    private void actualizarEventos(int delta) { // Actualiza el contador de eventos activos
-        eventosActivos += delta;
-        if (eventosActivos < 0) eventosActivos = 0;
-        if (eventosActivos > MAX_EVENTOS) eventosActivos = MAX_EVENTOS;
-        jProgressSEventos.setValue(eventosActivos);
-        jLabelEventosValor.setText(String.valueOf(eventosActivos));
+    // Actualiza el contador de eventos activos
+    private void actualizarEventos(int delta) { 
+        eventosActivos += delta; // Suma o resta eventos según el valor recibido (delta)
+        if (eventosActivos < 0) eventosActivos = 0; // Evita que el número de eventos sea negativo
+        if (eventosActivos > MAX_EVENTOS) eventosActivos = MAX_EVENTOS; // Evita que supere el máximo permitido
+        jProgressSEventos.setValue(eventosActivos); // Actualiza la barra de progreso con el número de eventos activos
+        jLabelEventosValor.setText(String.valueOf(eventosActivos)); // Muestra el valor actual en la etiqueta
+
     }
     
-    private int impactoPorNivel(String nivel) { // Define cuánto impacto genera un evento según su nivel
+    // Define cuánto impacto genera un evento según su nivel
+    private int impactoPorNivel(String nivel) { 
         switch (nivel) {
             case "CRÍTICO": return 20;
             case "MEDIO":   return 10;
@@ -318,18 +310,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
     }
     
+    // Método que modifica una barra de progreso
     private void modificarBarra(JProgressBar barra, JLabel label,int delta) {
-        int valor = barra.getValue() + delta;
-        if (valor < 0) valor = 0;
-        if (valor > 100) valor = 100;
-        barra.setValue(valor);
-        label.setText(valor + " %");
+        int valor = barra.getValue() + delta; // Calcula el nuevo valor de la barra sumando o restando el impacto
+        if (valor < 0) valor = 0; // Evita que el valor sea menor que 0
+        if (valor > 100) valor = 100; // Evita que el valor sea mayor que 100
+        barra.setValue(valor); // Actualiza el valor de la barra
+        label.setText(valor + " %"); // Muestra el porcentaje actualizado en la etiqueta
+
     }
     
-    private void aplicarImpacto(Evento e, boolean subir) { // Aplica el impacto del evento sobre la barra correspondiente
-        int impacto = impactoPorNivel(e.getNivel());
-        if (!subir) impacto = -impacto;
-        String tipo = e.getTipo().toUpperCase();
+    private void aplicarImpacto(Evento e, boolean subir) { 
+         int impacto = impactoPorNivel(e.getNivel()); // Obtiene el impacto según el nivel del evento
+        if (!subir) impacto = -impacto; // Si el evento se elimina o se deshace, el impacto se resta
+
+        String tipo = e.getTipo().toUpperCase(); // Convierte el tipo del evento a mayúsculas para facilitar la comparación
+
 
         //  ELÉCTRICO (solo fallos eléctricos directos)
         if (tipo.contains("APAGÓN") ||tipo.contains("CORTE") || tipo.contains("SOBRECARGA")){
@@ -360,130 +356,142 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     
     //-------DESPACHO Y RGISTRO
-    
-    private JPanel crearProblema(String texto) { // Crea un panel visual para mostrar un evento
-        JPanel panel = new JPanel();
-        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        panel.setBackground(new Color(240, 240, 240));
-        panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        panel.setLayout(new BorderLayout());
-        JLabel label = new JLabel("  " + texto);
-        label.setForeground(Color.BLACK);
-        panel.add(label, BorderLayout.CENTER);
-        return panel;
+    private JPanel crearProblema(String texto) { 
+        JPanel panel = new JPanel(); // Se crea un nuevo panel
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); // Se define el tamaño máximo del panel (ancho flexible, alto fijo)
+        panel.setBackground(new Color(240, 240, 240)); // Se establece un color de fondo claro para el panel
+        panel.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Se agrega un borde gris al panel
+        panel.setLayout(new BorderLayout()); // Se define el tipo de diseño del panel (BorderLayout)
+        JLabel label = new JLabel("  " + texto); // Se crea una etiqueta con el texto del evento
+        label.setForeground(Color.BLACK); // Se define el color del texto de la etiqueta
+        panel.add(label, BorderLayout.CENTER); // Se agrega la etiqueta al centro del panel
+        return panel; // Se retorna el panel creado
     }
-    
-    private void agregarProblemaAlDespacho(String texto) {
-        JPanel problema = crearProblema(texto);
-        jPanelDespacho.add(problema);
-        jPanelDespacho.revalidate();
-        jPanelDespacho.repaint();
-    }
-    
-     private void agregarProblemaAlRegistro(String texto) {
-        JPanel problema = crearProblema(texto);
-        jPanelRegsitro.add(problema);
-        jPanelRegsitro.revalidate();
-        jPanelRegsitro.repaint();
-    }
-    
-    public void refrescarDespacho() { // Refresca visualmente la cola de despacho (FIFO)
-         jPanelDespacho.removeAll();
 
-        NodoEvento aux = gestion.getDespachoOrdenado().getFrente();
-        while (aux != null) {
-            agregarProblemaAlDespacho(aux.info.toString());
-            aux = aux.liga;
+    private void agregarProblemaAlDespacho(String texto) {
+        JPanel problema = crearProblema(texto); // Se crea el panel del problema usando el método crearProblema
+        jPanelDespacho.add(problema); // Se agrega el panel al contenedor del despacho
+        jPanelDespacho.revalidate(); // Se actualiza la estructura del panel
+        jPanelDespacho.repaint(); // Se redibuja el panel para mostrar los cambios
+    }
+
+    private void agregarProblemaAlRegistro(String texto) { 
+        JPanel problema = crearProblema(texto); // Se crea el panel del problema usando el método crearProblema
+        jPanelRegsitro.add(problema); // Se agrega el panel al contenedor del registro
+        jPanelRegsitro.revalidate(); // Se actualiza la estructura del panel
+        jPanelRegsitro.repaint(); // Se redibuja el panel para mostrar los cambios
+    }
+
+    public void refrescarDespacho() { 
+        jPanelDespacho.removeAll(); // Se eliminan todos los componentes actuales del panel de despacho
+        NodoEvento aux = gestion.getDespachoOrdenado().getFrente(); // Se obtiene el primer nodo de la cola de despacho
+        while (aux != null) { // Se recorre la cola mientras existan nodos
+            agregarProblemaAlDespacho(aux.info.toString()); // Se agrega cada evento al panel de despacho
+            aux = aux.liga; // Se avanza al siguiente nodo de la cola
         }
 
-        jPanelDespacho.revalidate();
-        jPanelDespacho.repaint();
-        
-    }
-    
-    public void refrescarRegistro() { // Refresca visualmente el registro (PILA)
-        jPanelRegsitro.removeAll();
-        NodoEvento aux = gestion.getRegistro().getCima(); // pila (último arriba)
-            while (aux != null) {
-                agregarProblemaAlRegistro(aux.info.toString());
-                aux = aux.liga;
-            }
-        jPanelRegsitro.revalidate();
-        jPanelRegsitro.repaint();
+        jPanelDespacho.revalidate(); // Se actualiza la estructura del panel
+        jPanelDespacho.repaint(); // Se redibuja el panel para reflejar los cambios
     }
 
+    public void refrescarRegistro() { 
+        jPanelRegsitro.removeAll(); // Se eliminan todos los componentes actuales del panel de registro
+        NodoEvento aux = gestion.getRegistro().getCima(); // Se obtiene el nodo que está en la cima de la pila (último evento agregado)
+        while (aux != null) { // Se recorre la pila mientras existan nodos
+            agregarProblemaAlRegistro(aux.info.toString()); // Se agrega cada evento al panel de registro
+            aux = aux.liga; // Se avanza al siguiente nodo de la pila
+        }
+
+        jPanelRegsitro.revalidate(); // Se actualiza la estructura del panel
+        jPanelRegsitro.repaint(); // Se redibuja el panel para mostrar los cambios
+    }
+
+    
     
     
     // ------ HISTORISAL ------
-    
-    public void agregarAlHistorial(String texto) { // Agrega un evento al historial visual
-        if (topeHistorial == MAX_HISTORIAL - 1) return; // lleno
-         JLabel lbl = new JLabel(texto);
-         lbl.setForeground(Color.RED);
-         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-
-         // subir tope
-         topeHistorial++;
-
-         // mover todo hacia abajo (efecto pila)
-         for (int i = topeHistorial; i > 0; i--) {
-             pilaHistorial[i] = pilaHistorial[i - 1];
-         }
-
-         // nuevo arriba
-         pilaHistorial[0] = lbl;
-         refrescarHistorial();
-        
-    }
-    
-    public void refrescarHistorial() {
-        jPanelHistorial.removeAll();
-        int y = 10;
-        for (int i = 0; i <= topeHistorial; i++) {
-            JLabel lbl = pilaHistorial[i];
-            lbl.setBounds(10,y,500,25 );
-            jPanelHistorial.add(lbl);
-            y += 28;
+    // Método que agrega un evento al historial visual
+    public void agregarAlHistorial(String texto) { 
+        if (topeHistorial == MAX_HISTORIAL - 1) return; // Si el historial está lleno, no se agrega nada
+        JLabel lbl = new JLabel(texto); // Se crea una etiqueta con el texto del evento
+        lbl.setForeground(Color.RED); // Se define el color del texto (rojo para resaltar eventos)
+        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14)); // Se define el tipo y tamaño de letra
+        // Se incrementa el tope del historial porque se va a agregar un nuevo elemento
+        topeHistorial++;
+        // Se mueven los elementos hacia abajo para simular el comportamiento de una pila
+        for (int i = topeHistorial; i > 0; i--) {
+            pilaHistorial[i] = pilaHistorial[i - 1]; // Cada elemento baja una posición
         }
-        jPanelHistorial.revalidate();
-        jPanelHistorial.repaint();
+        // Se coloca el nuevo evento en la primera posición (arriba del historial)
+        pilaHistorial[0] = lbl;
+        // Se actualiza visualmente el historial en la interfaz
+        refrescarHistorial();
     }
+
+    // Método que actualiza visualmente el panel del historial
+    public void refrescarHistorial() { 
+        jPanelHistorial.removeAll(); // Se eliminan todos los componentes actuales del panel
+        int y = 10; // Posición vertical inicial para ubicar las etiquetas
+        // Se recorren los elementos del historial desde el primero hasta el tope
+        for (int i = 0; i <= topeHistorial; i++) {
+            JLabel lbl = pilaHistorial[i]; // Se obtiene la etiqueta almacenada en la pila
+            lbl.setBounds(10, y, 500, 25); // Se define la posición y tamaño de la etiqueta dentro del panel
+            jPanelHistorial.add(lbl); // Se agrega la etiqueta al panel
+            y += 28; // Se incrementa la posición vertical para el siguiente elemento
+        }
+        jPanelHistorial.revalidate(); // Se actualiza la estructura del panel
+        jPanelHistorial.repaint(); // Se redibuja el panel para mostrar los cambios
+    }
+
+    // Método que devuelve la hora actual del sistema
+    private String horaActual() { 
+        return java.time.LocalTime.now() // Se obtiene la hora actual
+                .withNano(0) // Elimina los nanosegundos
+                .toString(); // Se convierte la hora a texto
+    }
+
     
-    private String horaActual() { // Devuelve la hora actual del sistema
-        return java.time.LocalTime.now()
-                .withNano(0).toString();
-    }
     
     
     //--------- METODOS DE REGISTROS
-    
-    public void registrarFallo(Evento e) { // Registra un nuevo fallo
+    public void registrarFallo(Evento e) { 
         agregarAlHistorial("[" + horaActual() + "] ❌ FALLO: " + e.getNivel() + " | " + e.getTipo()); 
+        // Se incrementa el contador de eventos activos
         actualizarEventos(+1);
     }
 
-    public void registrarCascada(Evento e) { // Registra una cascada generada
+    public void registrarCascada(Evento e) { 
         agregarAlHistorial("[" + horaActual() + "] ⚠ CASCADA: " + e.getNivel() + " | " + e.getTipo());
+        // Se obtiene un color según el tipo de evento
         Color color = colorPorTipo(e);
+        // Se agrega un punto visual en el panel de puntos para representar el evento
         panelPuntos.agregarPunto(e, colorPorTipo(e));
+        // Se incrementa el número de eventos activos
         actualizarEventos(+1);
+        // Se aplica el impacto del evento sobre las barras de porcentaje del sistema
         aplicarImpacto(e, false); 
     }
 
     public void registrarAtendido(Evento e) { 
-// Registra un evento atendido
+        // Se agrega el evento atendido al historial con la hora actual
         agregarAlHistorial("[" + horaActual() + "] ✅ ATENDIDO: " + e.getNivel() + " | " + e.getTipo());
+        // Se disminuye el número de eventos activos porque el fallo fue resuelto
         actualizarEventos(-1);
+        // Se elimina el punto visual del panel de puntos
         panelPuntos.quitarPunto(e);
     }
 
-    public void registrarDeshecho(Evento e) { // Registra un deshacer dentro de la interfaz
-        agregarAlHistorial( "[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo());
+    public void registrarDeshecho(Evento e) { 
+        // Se agrega al historial el evento que fue deshecho
+        agregarAlHistorial("[" + horaActual() + "] 🔁 DESHECHO: " + e.getNivel() + " | " + e.getTipo());
+        // Se incrementa nuevamente el número de eventos activos
         actualizarEventos(+1);
+        // Se restaura el punto visual del evento en el panel de puntos
         panelPuntos.restaurarPunto(e);
     }
-    
-    
+
+
+
     
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
